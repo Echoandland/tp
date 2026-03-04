@@ -9,15 +9,15 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
+### Yucheng Wang
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/echoandland.png" width="200px">
 
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[homepage](https://echoandland.github.io/)]
+[[github](https://github.com/Echoandland)]
+[[portfolio](team/Yucheng.md)]
 
-* Role: Project Advisor
+* Role: Developer & Project designer
 
 ### Jane Doe
 
