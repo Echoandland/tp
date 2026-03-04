@@ -315,13 +315,21 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 *{More to be added}*
 
-### Non-Functional Requirements
+## Non-functional requirements (NFRs)
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 
-*{More to be added}*
+1. **Command-first usability:** All core features (add/edit/delete/view/search/tag/mark status) shall be usable via typed commands without requiring mouse-only operations.
+2. **Performance (search):** With up to **10,000 contacts** and **1,000 delivery records**, search results shall be displayed within **2 seconds** on a typical laptop.
+3. **Performance (list rendering):** With up to **1,000 delivery records**, rendering a delivery list shall complete within **2 seconds**.
+4. **Reliability (data loss):** In the event of a crash or connectivity loss, the system shall not lose more than **1 minute** of user edits (autosave or frequent persistence).
+5. **Portability:** The app shall run on **Windows, macOS, and Linux** using **Java 17**.
+6. **Local storage:** User data shall be stored locally in a **human-editable text file**.
+7. **No external server dependency:** Core features shall not depend on a custom remote server (the app remains usable without any self-hosted backend).
+8. **Security (local data):** The system shall not transmit user data externally unless explicitly triggered by the user (e.g., export/share).
+
+
+---
+
 
 ### Glossary
 
