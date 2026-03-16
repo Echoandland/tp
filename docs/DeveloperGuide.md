@@ -262,71 +262,147 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
+* Has a need to manage large number of deliveries from addresses to addresses
 * prefer desktop apps over other types
 * can type fast
 * prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: manage delivery details faster than a typical mouse/GUI driven app
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                     | So that I can…​                                                        |
-| -------- | ------------------------------------------ | ------------------------------ | ---------------------------------------------------------------------- |
-| `* * *`  | new user                                   | see usage instructions         | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person               |                                                                        |
-| `* * *`  | user                                       | delete a person                | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name          | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details   | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name           | locate a person easily                                                 |
+| Priority | As a…           | I want to…                                          | So that I can…                           |
+| -------- |-----------------|-----------------------------------------------------|------------------------------------------|
+| `* * *`  | user            | add addresses                                       | store new delivery locations             |
+| `* * *`  | user            | remove addresses                                    | keep the address book clean              |
+| `* * *`  | user            | edit addresses                                      | correct outdated location details        |
+| `* * *`  | user            | create a delivery list                              | keep track of deliveries                 |
+| `* * *`  | user            | view delivery lists and addresses                   | know what to do next                     |
+| `* * *`  | user            | mark a delivery as complete                         | track what is left                       |
+| `* * *`  | user            | mark a delivery as incomplete                       | undo mistakes                            |
+| `* * *`  | user            | add a client contact with key fields                | retrieve client details quickly          |
+| `* * *`  | user            | create a delivery record linked to a client contact | track work by customer                   |
+| `* * *`  | forgetful user  | track all deliveries for the day                    | complete them on time                    |
+| `* *`    | Efficient user      | Plan the route beforehand                                | reach all locations quickly and easily   |
+| `* *`    | user            | view deliveries due at each location                | track progress per stop                  |
+| `* *`    | user            | tag contacts (e.g., VIP/fragile/COD/restricted)     | filter for special handling              |
+| `* *`    | user            | add cut-off timings to deliveries                   | know which deliveries must be done first |
+| `* *`    | user            | sort deliveries by tags/time/distance               | prioritize efficiently                   |
+| `*`      | first-time user | view a guided tour                                  | learn the app quickly                    |
+| `*`      | Lazy user       | add addresses using postal code/coordinates         | reduce manual typing                     |
+| `*`      | Driving user    | View map through the app                            | use the GPS to navigate quickly          |
 
-*{More to be added}*
+## Use cases
 
-### Use cases
+### UC01 Create a delivery record linked to a client contact
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Actor:** User 
+**Preconditions:** 
+- The user has launched Mycelia.
+- A client contact already exists in the system.
 
-**MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+**Main success scenario:**
+1. User searches for a client contact using a keyword (e.g., client name).
+2. System displays matching client contacts.
+3. User selects the intended client contact.
+4. User requests to create a delivery record and provides required details (e.g., delivery address, date/time, tags, cut-off time).
+5. System validates the input.
+6. System creates the delivery record linked to the selected client contact.
+7. System shows a confirmation message.
 
-    Use case ends.
 
-**Extensions**
+**Extensions:**
+- **2a. No matches found:** System shows “No matching contacts found” and ends the use case.
+- **5a. Invalid/missing fields:** System shows validation errors and prompts user to correct the inputs.
+- **6a. Duplicate record detected:** System warns the user and asks whether to proceed or cancel.
 
-* 2a. The list is empty.
 
-  Use case ends.
+---
 
-* 3a. The given index is invalid.
 
-    * 3a1. AddressBook shows an error message.
+### UC02 Mark a delivery as complete
 
-      Use case resumes at step 2.
+**Actor:** User (dispatcher / delivery coordinator) 
+**Preconditions:** 
+- A delivery list for the day exists.
+- At least one delivery record is currently not completed.
 
-*{More to be added}*
 
-### Non-Functional Requirements
+**Main success scenario:**
+1. User requests to view today’s delivery list.
+2. System displays the delivery list with current statuses.
+3. User selects the target delivery record.
+4. User marks the selected delivery record as **complete**.
+5. System updates the delivery status.
+6. System refreshes the delivery list and shows confirmation.
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 
-*{More to be added}*
+**Extensions:**
+- **3a. Delivery not found:** System informs the user and ends the use case.
+- **4a. Delivery already completed:** System warns the user and leaves the status unchanged.
+- **4b. Wrong delivery chosen:** User marks the delivery as incomplete (undo) and repeats steps 3–6.
 
-### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+---
+
+
+### UC03 Tag a client contact for special handling
+
+
+**Actor:** User 
+**Preconditions:** 
+- The client contact exists.
+
+
+**Main success scenario:**
+1. User searches for a client contact.
+2. System displays matching contacts.
+3. User selects the target contact.
+4. User adds one or more tags (e.g., VIP, fragile, COD, restricted).
+5. System updates the contact record and shows confirmation.
+
+
+**Extensions:**
+- **2a. No matches found:** System shows “No matching contacts found” and ends the use case.
+- **4a. Tag already exists:** System ignores the duplicate tag and confirms completion.
+
+
+---
+
+
+## Non-functional requirements (NFRs)
+
+
+1. **Command-first usability:** All core features (add/edit/delete/view/search/tag/mark status) shall be usable via typed commands without requiring mouse-only operations.
+2. **Performance (search):** With up to **10,000 contacts** and **1,000 delivery records**, search results shall be displayed within **2 seconds** on a typical laptop.
+3. **Performance (list rendering):** With up to **1,000 delivery records**, rendering a delivery list shall complete within **2 seconds**.
+4. **Reliability (data loss):** In the event of a crash or connectivity loss, the system shall not lose more than **1 minute** of user edits (autosave or frequent persistence).
+5. **Portability:** The app shall run on **Windows, macOS, and Linux** using **Java 17**.
+6. **Local storage:** User data shall be stored locally in a **human-editable text file**.
+7. **No external server dependency:** Core features shall not depend on a custom remote server (the app remains usable without any self-hosted backend).
+8. **Security (local data):** The system shall not transmit user data externally unless explicitly triggered by the user (e.g., export/share).
+
+
+---
+
+
+## Glossary
+
+
+- **Client contact:** A customer entry (company/person) with key fields such as name, phone, address, and notes.
+- **Partner:** A collaborating entity (e.g., supplier or 3PL partner) whose details are stored for coordination.
+- **Delivery record:** A single delivery task, optionally linked to a client contact, containing address, timing, and status.
+- **Delivery list:** A collection of delivery records grouped for a day or route.
+- **Cut-off time:** The latest time by which a delivery should be completed.
+- **Tag:** A label applied to contacts/addresses/deliveries for filtering and prioritization.
+- **Special-handling tags:** Tags such as VIP/fragile/COD/restricted indicating extra constraints.
+- **COD (Cash on Delivery):** A delivery that requires payment collection upon delivery.
 
 --------------------------------------------------------------------------------------------------------------------
 

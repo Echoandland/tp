@@ -5,26 +5,36 @@ title: About Us
 
 We are a team based in the [School of Computing, National University of Singapore](https://www.comp.nus.edu.sg).
 
-You can reach us at the email `seer[at]comp.nus.edu.sg`
-
 ## Project team
 
-### John Doe
+### Joshua Poon
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/eepyadventure.png" width="200px">
 
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+[[github](https://github.com/eepyadventure)]
+### Yucheng Wang
 
-* Role: Project Advisor
+<img src="images/echoandland.png" width="200px">
 
-### Jane Doe
+[[homepage](https://echoandland.github.io/)]
+[[github](https://github.com/Echoandland)]
+[[portfolio](team/Yucheng.md)]
 
-<img src="images/johndoe.png" width="200px">
+* Role: Developer & Project designer
+### Guo Xintong
 
-[[github](http://github.com/johndoe)]
-[[portfolio](team/johndoe.md)]
+<img src="images/guoxintongmark.png" width="200px">
+
+* GitHub: [GuoxintongMark](https://github.com/GuoxintongMark)
+* Role: Developer
+* Responsibilities: Implementation and testing
+
+
+### Eugene Ong
+
+<img src="images/honeyglazedporkchops.png" width="200px">
+
+[[github](https://github.com/HoneyGlazedPorkChops)]
 
 * Role: Team Lead
 * Responsibilities: UI
