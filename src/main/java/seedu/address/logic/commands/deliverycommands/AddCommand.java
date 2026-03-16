@@ -1,4 +1,4 @@
-package seedu.address.logic.commands.deliveryCommands;
+package seedu.address.logic.commands.deliverycommands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;

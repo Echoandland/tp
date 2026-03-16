@@ -1,8 +1,10 @@
-package seedu.address.logic.commands.deliveryCommands;
+package seedu.address.logic.commands.deliverycommands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -12,39 +14,53 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.tag.Tag;
 
 /**
- * Deletes a delivery identified using its displayed index from the address book.
+ * Marks a delivery as delivered by adding the tag "delivered".
  */
-public class DeleteCommand extends Command {
+public class MarkCommand extends Command {
 
-    public static final String COMMAND_WORD = "delete";
+    public static final String COMMAND_WORD = "mark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the delivery identified by the index number used in the displayed delivery list.\n"
+            + ": Marks the delivery identified by the index number as delivered.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_DELIVERY_SUCCESS = "Deleted delivery: %1$s";
+    public static final String MESSAGE_MARK_DELIVERY_SUCCESS = "Marked delivery as delivered: %1$s";
 
     private final Index targetIndex;
 
-    public DeleteCommand(Index targetIndex) {
+    public MarkCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
         List<Delivery> lastShownList = model.getFilteredDeliveryList();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX);
         }
 
-        Delivery deliveryToDelete = lastShownList.get(targetIndex.getZeroBased());
-        model.deleteDelivery(deliveryToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_DELIVERY_SUCCESS, deliveryToDelete));
+        Delivery deliveryToMark = lastShownList.get(targetIndex.getZeroBased());
+
+        Set<Tag> newTags = new HashSet<>(deliveryToMark.getTags());
+        newTags.add(new Tag("delivered"));
+
+        Delivery markedDelivery = new Delivery(
+                deliveryToMark.getProduct(),
+                deliveryToMark.getCompany(),
+                deliveryToMark.getAddress(),
+                newTags
+        );
+
+        model.setDelivery(deliveryToMark, markedDelivery);
+
+        return new CommandResult(String.format(MESSAGE_MARK_DELIVERY_SUCCESS, markedDelivery));
     }
 
     @Override
@@ -53,12 +69,12 @@ public class DeleteCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof DeleteCommand)) {
+        if (!(other instanceof MarkCommand)) {
             return false;
         }
 
-        DeleteCommand otherDeleteCommand = (DeleteCommand) other;
-        return targetIndex.equals(otherDeleteCommand.targetIndex);
+        MarkCommand otherMarkCommand = (MarkCommand) other;
+        return targetIndex.equals(otherMarkCommand.targetIndex);
     }
 
     @Override

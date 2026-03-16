@@ -10,7 +10,6 @@ import java.util.Set;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.company.Company;
 import seedu.address.model.tag.Tag;
-import seedu.address.model.delivery.Delivery;
 
 /**
  * Represents a Delivery in the address book.

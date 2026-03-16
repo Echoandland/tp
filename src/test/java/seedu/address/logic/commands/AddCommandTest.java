@@ -24,6 +24,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
 import seedu.address.model.company.Company;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
@@ -156,6 +157,36 @@ public class AddCommandTest {
 
         @Override
         public void updateFilteredCompanyList(Predicate<Company> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setDelivery(Delivery target, Delivery editedDelivery) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasDelivery(Delivery delivery) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addDelivery(Delivery delivery) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteDelivery(Delivery delivery) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList<Delivery> getFilteredDeliveryList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
     }

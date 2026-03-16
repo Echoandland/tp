@@ -1,4 +1,4 @@
-package seedu.address.logic.commands.deliveryCommands;
+package seedu.address.logic.commands.deliverycommands;
 
 import static java.util.Objects.requireNonNull;
 
@@ -17,22 +17,23 @@ import seedu.address.model.delivery.Delivery;
 import seedu.address.model.tag.Tag;
 
 /**
- * Marks a delivery as delivered by adding the tag "delivered".
+ * Unmarks a delivery as delivered by removing the "delivered" tag.
  */
-public class MarkCommand extends Command {
+public class UnmarkCommand extends Command {
 
-    public static final String COMMAND_WORD = "mark";
+    public static final String COMMAND_WORD = "unmark";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Marks the delivery identified by the index number as delivered.\n"
+            + ": Unmarks the delivery identified by the index number.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_MARK_DELIVERY_SUCCESS = "Marked delivery as delivered: %1$s";
+    public static final String MESSAGE_UNMARK_DELIVERY_SUCCESS =
+            "Unmarked delivery as not delivered: %1$s";
 
     private final Index targetIndex;
 
-    public MarkCommand(Index targetIndex) {
+    public UnmarkCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -46,21 +47,22 @@ public class MarkCommand extends Command {
             throw new CommandException(Messages.MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX);
         }
 
-        Delivery deliveryToMark = lastShownList.get(targetIndex.getZeroBased());
+        Delivery deliveryToUnmark = lastShownList.get(targetIndex.getZeroBased());
 
-        Set<Tag> newTags = new HashSet<>(deliveryToMark.getTags());
-        newTags.add(new Tag("delivered"));
+        Set<Tag> newTags = new HashSet<>(deliveryToUnmark.getTags());
+        newTags.remove(new Tag("delivered"));
 
-        Delivery markedDelivery = new Delivery(
-                deliveryToMark.getProduct(),
-                deliveryToMark.getCompany(),
-                deliveryToMark.getAddress(),
+        Delivery unmarkedDelivery = new Delivery(
+                deliveryToUnmark.getProduct(),
+                deliveryToUnmark.getCompany(),
+                deliveryToUnmark.getAddress(),
                 newTags
         );
 
-        model.setDelivery(deliveryToMark, markedDelivery);
+        model.setDelivery(deliveryToUnmark, unmarkedDelivery);
 
-        return new CommandResult(String.format(MESSAGE_MARK_DELIVERY_SUCCESS, markedDelivery));
+        return new CommandResult(
+                String.format(MESSAGE_UNMARK_DELIVERY_SUCCESS, unmarkedDelivery));
     }
 
     @Override
@@ -69,12 +71,12 @@ public class MarkCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof MarkCommand)) {
+        if (!(other instanceof UnmarkCommand)) {
             return false;
         }
 
-        MarkCommand otherMarkCommand = (MarkCommand) other;
-        return targetIndex.equals(otherMarkCommand.targetIndex);
+        UnmarkCommand otherCommand = (UnmarkCommand) other;
+        return targetIndex.equals(otherCommand.targetIndex);
     }
 
     @Override
