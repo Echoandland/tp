@@ -12,6 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.company.Company;
+import seedu.address.model.delivery.Delivery;
 
 /**
  * Represents the in-memory model of the address book data.
@@ -22,6 +23,7 @@ public class ModelManager implements Model {
     private final AddressBook addressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Company> filteredCompanies;
+    private final FilteredList<Delivery> filteredDeliveries;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -33,7 +35,8 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
+        this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
+        this.filteredDeliveries = new FilteredList<>(this.addressBook.getDeliveryList());
     }
 
     public ModelManager() {
@@ -95,11 +98,13 @@ public class ModelManager implements Model {
 
     @Override
     public void deleteCompany(Company target) {
+        requireNonNull(target);
         addressBook.removeCompany(target);
     }
 
     @Override
     public void addCompany(Company company) {
+        requireNonNull(company);
         addressBook.addCompany(company);
         updateFilteredCompanyList(PREDICATE_SHOW_ALL_COMPANIES);
     }
@@ -107,15 +112,13 @@ public class ModelManager implements Model {
     @Override
     public void setCompany(Company target, Company editedCompany) {
         requireAllNonNull(target, editedCompany);
-
         addressBook.setCompany(target, editedCompany);
     }
 
-    //=========== Filtered Company List Accessors ============================================================
+    //=========== Company List Accessors =====================================================================
 
     /**
-     * Returns an unmodifiable view of the list of {@code Company} backed by the internal list of
-     * {@code versionedAddressBook}
+     * Returns an unmodifiable view of the list of {@code Company} backed by the internal address book.
      */
     @Override
     public ObservableList<Company> getFilteredCompanyList() {
@@ -128,13 +131,47 @@ public class ModelManager implements Model {
         filteredCompanies.setPredicate(predicate);
     }
 
+    //=========== Delivery-level operations ==================================================================
+
+    @Override
+    public boolean hasDelivery(Delivery delivery) {
+        requireNonNull(delivery);
+        return addressBook.hasDelivery(delivery);
+    }
+
+    @Override
+    public void addDelivery(Delivery delivery) {
+        requireNonNull(delivery);
+        addressBook.addDelivery(delivery);
+        updateFilteredDeliveryList(deliveryItem -> true);
+    }
+
+    @Override
+    public void deleteDelivery(Delivery delivery) {
+        requireNonNull(delivery);
+        addressBook.removeDelivery(delivery);
+        updateFilteredDeliveryList(deliveryItem -> true);
+    }
+
+    //=========== Delivery List Accessors ====================================================================
+
+    @Override
+    public ObservableList<Delivery> getFilteredDeliveryList() {
+        return filteredDeliveries;
+    }
+
+    @Override
+    public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
+        requireNonNull(predicate);
+        filteredDeliveries.setPredicate(predicate);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
 
-        // instanceof handles nulls
         if (!(other instanceof ModelManager)) {
             return false;
         }
@@ -142,7 +179,14 @@ public class ModelManager implements Model {
         ModelManager otherModelManager = (ModelManager) other;
         return addressBook.equals(otherModelManager.addressBook)
                 && userPrefs.equals(otherModelManager.userPrefs)
-                && filteredCompanies.equals(otherModelManager.filteredCompanies);
+                && filteredCompanies.equals(otherModelManager.filteredCompanies)
+                && filteredDeliveries.equals(otherModelManager.filteredDeliveries);
     }
 
+    @Override
+    public void setDelivery(Delivery target, Delivery editedDelivery) {
+        requireAllNonNull(target, editedDelivery);
+        addressBook.setDelivery(target, editedDelivery);
+        updateFilteredDeliveryList(deliveryItem -> true);
+    }
 }
