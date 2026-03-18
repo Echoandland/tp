@@ -13,7 +13,7 @@ import seedu.address.model.company.Phone;
 import seedu.address.model.tag.Tag;
 
 /**
- * A utility class to help with building EditCompanyDescriptor objects.
+ * A utility class to help with building EditDeliveryDescriptor objects.
  */
 public class EditPersonDescriptorBuilder {
 
@@ -28,7 +28,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Returns an {@code EditCompanyDescriptor} with fields containing {@code person}'s details
+     * Returns an {@code EditDeliveryDescriptor} with fields containing {@code person}'s details
      */
     public EditPersonDescriptorBuilder(Company person) {
         descriptor = new EditCompanyDescriptor();
@@ -40,7 +40,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Name} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Name} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withName(String name) {
         descriptor.setName(new Name(name));
@@ -48,7 +48,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Phone} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Phone} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withPhone(String phone) {
         descriptor.setPhone(new Phone(phone));
@@ -56,7 +56,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Email} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Email} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withEmail(String email) {
         descriptor.setEmail(new Email(email));
@@ -64,7 +64,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Sets the {@code Address} of the {@code EditCompanyDescriptor} that we are building.
+     * Sets the {@code Address} of the {@code EditDeliveryDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withAddress(String address) {
         descriptor.setAddress(new Address(address));
@@ -72,7 +72,7 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
-     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code EditCompanyDescriptor}
+     * Parses the {@code tags} into a {@code Set<Tag>} and set it to the {@code EditDeliveryDescriptor}
      * that we are building.
      */
     public EditPersonDescriptorBuilder withTags(String... tags) {

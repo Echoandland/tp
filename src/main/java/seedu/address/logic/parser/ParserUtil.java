@@ -9,10 +9,10 @@ import java.util.Set;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.company.*;
+import seedu.address.model.delivery.*;
 import seedu.address.model.company.Address;
-import seedu.address.model.company.Email;
-import seedu.address.model.company.Name;
-import seedu.address.model.company.Phone;
+import seedu.address.model.delivery.Company;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -71,13 +71,28 @@ public class ParserUtil {
      *
      * @throws ParseException if the given {@code address} is invalid.
      */
-    public static Address parseAddress(String address) throws ParseException {
+    public static seedu.address.model.company.Address  parseCompanyAddress(String address) throws ParseException {
         requireNonNull(address);
         String trimmedAddress = address.trim();
         if (!Address.isValidAddress(trimmedAddress)) {
             throw new ParseException(Address.MESSAGE_CONSTRAINTS);
         }
-        return new Address(trimmedAddress);
+        return new seedu.address.model.company.Address(trimmedAddress);
+    }
+
+    /**
+     * Parses a {@code String address} into an {@code Address}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code address} is invalid.
+     */
+    public static seedu.address.model.delivery.Address  parseDeliveryAddress(String address) throws ParseException {
+        requireNonNull(address);
+        String trimmedAddress = address.trim();
+        if (!Address.isValidAddress(trimmedAddress)) {
+            throw new ParseException(Address.MESSAGE_CONSTRAINTS);
+        }
+        return new seedu.address.model.delivery.Address(trimmedAddress);
     }
 
     /**
@@ -93,6 +108,36 @@ public class ParserUtil {
             throw new ParseException(Email.MESSAGE_CONSTRAINTS);
         }
         return new Email(trimmedEmail);
+    }
+
+    /**
+     * Parses a {@code String product} into an {@code Product}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code product} is invalid.
+     */
+    public static Product parseProduct(String product) throws ParseException {
+        requireNonNull(product);
+        String trimmedProduct = product.trim();
+        if (!Email.isValidEmail(trimmedProduct)) {
+            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+        }
+        return new Product(trimmedProduct);
+    }
+
+    /**
+     * Parses a {@code String product} into an {@code Product}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code product} is invalid.
+     */
+    public static seedu.address.model.delivery.Company parseCompany(String company) throws ParseException {
+        requireNonNull(company);
+        String trimmedCompany = company.trim();
+        if (!Email.isValidEmail(trimmedCompany)) {
+            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+        }
+        return new Company (trimmedCompany);
     }
 
     /**

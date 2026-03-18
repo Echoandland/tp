@@ -7,11 +7,11 @@ import seedu.address.model.delivery.Delivery;
 /**
  * Unmodifiable view of an address book
  */
-public interface ReadOnlyAddressBook {
+public interface ReadOnlyDeliveryBook {
 
     /**
      * Returns an unmodifiable view of the companies list.
      * This list will not contain any duplicate companies.
      */
-    ObservableList<Company> getCompanyList();
+    ObservableList<Delivery> getDeliveryList();
 }

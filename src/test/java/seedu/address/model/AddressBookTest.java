@@ -87,8 +87,7 @@ public class AddressBookTest {
     @Test
     public void toStringMethod() {
         String expected = AddressBook.class.getCanonicalName()
-                + "{companies=" + addressBook.getCompanyList()
-                + ", deliveries=" + addressBook.getDeliveryList() + "}";
+                + "{companies=" + addressBook.getCompanyList() + "}";
         assertEquals(expected, addressBook.toString());
     }
 
@@ -108,10 +107,6 @@ public class AddressBookTest {
             return companies;
         }
 
-        @Override
-        public ObservableList<Delivery> getDeliveryList() {
-            return deliveries;
-        }
     }
 
 }

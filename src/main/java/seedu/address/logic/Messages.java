@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.company.Company;
+import seedu.address.model.delivery.Delivery;
 
 /**
  * Container for user visible messages.
@@ -47,6 +48,21 @@ public class Messages {
                 .append(company.getAddress())
                 .append("; Tags: ");
         company.getTags().forEach(builder::append);
+        return builder.toString();
+    }
+
+    /**
+     * Formats the {@code company} for display to the user.
+     */
+    public static String format(Delivery delivery) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(delivery.getProduct())
+                .append("; Product: ")
+                .append(delivery.getCompany())
+                .append("; Company: ")
+                .append(delivery.getAddress())
+                .append("; Address: ");
+        delivery.getTags().forEach(builder::append);
         return builder.toString();
     }
 

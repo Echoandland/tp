@@ -9,8 +9,6 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.UniqueCompanyList;
-import seedu.address.model.delivery.Delivery;
-import seedu.address.model.delivery.UniqueDeliveryList;
 
 /**
  * Wraps all data at the address-book level.
@@ -20,7 +18,6 @@ import seedu.address.model.delivery.UniqueDeliveryList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniqueCompanyList companies;
-    private final UniqueDeliveryList deliveries;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -31,7 +28,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         companies = new UniqueCompanyList();
-        deliveries = new UniqueDeliveryList();
     }
 
     public AddressBook() {}
@@ -55,21 +51,12 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
-     * Replaces the contents of the delivery list with {@code deliveries}.
-     * {@code deliveries} must not contain duplicate deliveries.
-     */
-    public void setDeliveries(List<Delivery> deliveries) {
-        this.deliveries.setDeliveries(deliveries);
-    }
-
-    /**
      * Resets the existing data of this {@code AddressBook} with {@code newData}.
      */
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
 
         setCompanies(newData.getCompanyList());
-        setDeliveries(newData.getDeliveryList());
     }
 
     //// company-level operations
@@ -109,63 +96,18 @@ public class AddressBook implements ReadOnlyAddressBook {
         companies.remove(key);
     }
 
-    //// delivery-level operations
-
-    /**
-     * Returns true if a delivery with the same identity as {@code delivery} exists in the address book.
-     */
-    public boolean hasDelivery(Delivery delivery) {
-        requireNonNull(delivery);
-        return deliveries.contains(delivery);
-    }
-
-    /**
-     * Adds a delivery to the address book.
-     * The delivery must not already exist in the address book.
-     */
-    public void addDelivery(Delivery delivery) {
-        requireNonNull(delivery);
-        deliveries.add(delivery);
-    }
-
-    /**
-     * Replaces the given delivery {@code target} in the list with {@code editedDelivery}.
-     * {@code target} must exist in the address book.
-     * The delivery identity of {@code editedDelivery} must not be the same as another existing delivery
-     * in the address book.
-     */
-    public void setDelivery(Delivery target, Delivery editedDelivery) {
-        requireNonNull(editedDelivery);
-        deliveries.setDelivery(target, editedDelivery);
-    }
-
-    /**
-     * Removes {@code key} from this {@code AddressBook}.
-     * {@code key} must exist in the address book.
-     */
-    public void removeDelivery(Delivery key) {
-        requireNonNull(key);
-        deliveries.remove(key);
-    }
-
     //// util methods
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("companies", companies)
-                .add("deliveries", deliveries)
                 .toString();
     }
 
     @Override
     public ObservableList<Company> getCompanyList() {
         return companies.asUnmodifiableObservableList();
-    }
-
-    @Override
-    public ObservableList<Delivery> getDeliveryList() {
-        return deliveries.asUnmodifiableObservableList();
     }
 
     @Override
@@ -179,12 +121,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return companies.equals(otherAddressBook.companies)
-                && deliveries.equals(otherAddressBook.deliveries);
+        return companies.equals(otherAddressBook.companies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companies, deliveries);
+        return Objects.hash(companies);
     }
 }

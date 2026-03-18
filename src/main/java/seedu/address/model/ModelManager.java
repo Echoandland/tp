@@ -21,6 +21,7 @@ public class ModelManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final AddressBook addressBook;
+    private final DeliveryBook deliveryBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
@@ -28,19 +29,20 @@ public class ModelManager implements Model {
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
      */
-    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyUserPrefs userPrefs) {
+    public ModelManager(ReadOnlyAddressBook addressBook, ReadOnlyDeliveryBook deliveryBook, ReadOnlyUserPrefs userPrefs) {
         requireAllNonNull(addressBook, userPrefs);
 
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
 
         this.addressBook = new AddressBook(addressBook);
+        this.deliveryBook = new DeliveryBook(deliveryBook);
         this.userPrefs = new UserPrefs(userPrefs);
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
-        this.filteredDeliveries = new FilteredList<>(this.addressBook.getDeliveryList());
+        this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
     }
 
     public ModelManager() {
-        this(new AddressBook(), new UserPrefs());
+        this(new AddressBook(), new DeliveryBook(), new UserPrefs());
     }
 
     //=========== UserPrefs ==================================================================================
@@ -131,25 +133,32 @@ public class ModelManager implements Model {
         filteredCompanies.setPredicate(predicate);
     }
 
-    //=========== Delivery-level operations ==================================================================
+    //=========== DeliveryBook ==================================================================
 
     @Override
     public boolean hasDelivery(Delivery delivery) {
         requireNonNull(delivery);
-        return addressBook.hasDelivery(delivery);
+        return deliveryBook.hasDelivery(delivery);
     }
 
     @Override
     public void addDelivery(Delivery delivery) {
         requireNonNull(delivery);
-        addressBook.addDelivery(delivery);
+        deliveryBook.addDelivery(delivery);
+        updateFilteredDeliveryList(deliveryItem -> true);
+    }
+
+    @Override
+    public void setDelivery(Delivery target, Delivery editedDelivery) {
+        requireAllNonNull(target, editedDelivery);
+        deliveryBook.setDelivery(target, editedDelivery);
         updateFilteredDeliveryList(deliveryItem -> true);
     }
 
     @Override
     public void deleteDelivery(Delivery delivery) {
         requireNonNull(delivery);
-        addressBook.removeDelivery(delivery);
+        deliveryBook.removeDelivery(delivery);
         updateFilteredDeliveryList(deliveryItem -> true);
     }
 
@@ -181,12 +190,5 @@ public class ModelManager implements Model {
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && filteredCompanies.equals(otherModelManager.filteredCompanies)
                 && filteredDeliveries.equals(otherModelManager.filteredDeliveries);
-    }
-
-    @Override
-    public void setDelivery(Delivery target, Delivery editedDelivery) {
-        requireAllNonNull(target, editedDelivery);
-        addressBook.setDelivery(target, editedDelivery);
-        updateFilteredDeliveryList(deliveryItem -> true);
     }
 }

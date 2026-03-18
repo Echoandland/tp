@@ -14,7 +14,7 @@ import seedu.address.model.delivery.Delivery;
 public interface Model {
     /** {@code Predicate} that always evaluate to true */
     Predicate<Company> PREDICATE_SHOW_ALL_COMPANIES = unused -> true;
-
+    Predicate<Delivery> PREDICATE_SHOW_ALL_DELIVERIES = unused -> true;
     /**
      * Replaces user prefs data with the data in {@code userPrefs}.
      */
@@ -94,9 +94,9 @@ public interface Model {
 
     void addDelivery(Delivery delivery);
 
+    void setDelivery(Delivery delivery, Delivery editedDelivery);
+
     ObservableList<Delivery> getFilteredDeliveryList();
 
     void updateFilteredDeliveryList(Predicate<Delivery> predicate);
-
-    void setDelivery(Delivery target, Delivery editedDelivery);
 }
