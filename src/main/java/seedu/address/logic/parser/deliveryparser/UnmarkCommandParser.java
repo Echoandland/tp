@@ -3,6 +3,7 @@ package seedu.address.logic.parser.deliveryparser;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.deliverycommands.UnmarkCommand;
 import seedu.address.logic.parser.Parser;
+import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
@@ -18,15 +19,13 @@ public class UnmarkCommandParser implements Parser<UnmarkCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public UnmarkCommand parse(String args) throws ParseException {
-        String trimmedArgs = args.trim();
-        if (trimmedArgs.isEmpty()) {
+        try {
+            Index index = ParserUtil.parseIndex(args);
+            return new UnmarkCommand(index);
+        } catch (ParseException pe) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnmarkCommand.MESSAGE_USAGE));
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnmarkCommand.MESSAGE_USAGE), pe);
         }
-
-        Index index = Index.fromZeroBased(Integer.parseInt(trimmedArgs.split("\\s+")[0]));
-
-        return new UnmarkCommand(index);
     }
 
 }
