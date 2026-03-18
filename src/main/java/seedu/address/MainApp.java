@@ -16,9 +16,12 @@ import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
 import seedu.address.model.*;
-import seedu.address.model.util.SampleDataUtil;
+import seedu.address.model.util.SampleAddressDataUtil;
+import seedu.address.model.util.SampleDeliveryDataUtil;
 import seedu.address.storage.AddressBookStorage;
+import seedu.address.storage.DeliveryBookStorage;
 import seedu.address.storage.JsonAddressBookStorage;
+import seedu.address.storage.JsonDeliveryBookStorage;
 import seedu.address.storage.JsonUserPrefsStorage;
 import seedu.address.storage.Storage;
 import seedu.address.storage.StorageManager;
@@ -53,7 +56,8 @@ public class MainApp extends Application {
         UserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(config.getUserPrefsFilePath());
         UserPrefs userPrefs = initPrefs(userPrefsStorage);
         AddressBookStorage addressBookStorage = new JsonAddressBookStorage(userPrefs.getAddressBookFilePath());
-        storage = new StorageManager(addressBookStorage, userPrefsStorage);
+        DeliveryBookStorage deliveryBookStorage = new JsonDeliveryBookStorage(userPrefs.getDeliveryBookFilePath());
+        storage = new StorageManager(addressBookStorage, deliveryBookStorage, userPrefsStorage);
 
         model = initModelManager(storage, userPrefs);
 
@@ -72,22 +76,34 @@ public class MainApp extends Application {
 
         Optional<ReadOnlyAddressBook> addressBookOptional;
         Optional<ReadOnlyDeliveryBook> deliveryBookOptional;
-        ReadOnlyAddressBook initialData;
+        ReadOnlyAddressBook initialAddressData;
+        ReadOnlyDeliveryBook initialDeliveryData;
         try {
             addressBookOptional = storage.readAddressBook();
-            deliveryBookOptional = storage.readDeliveryBook();
             if (!addressBookOptional.isPresent()) {
                 logger.info("Creating a new data file " + storage.getAddressBookFilePath()
                         + " populated with a sample AddressBook.");
             }
-            initialData = addressBookOptional.orElseGet(SampleDataUtil::getSampleAddressBook);
+            initialAddressData = addressBookOptional.orElseGet(SampleAddressDataUtil::getSampleAddressBook);
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
                     + " Will be starting with an empty AddressBook.");
-            initialData = new AddressBook();
+            initialAddressData = new AddressBook();
         }
 
-        return new ModelManager(initialData, userPrefs);
+        try {
+            deliveryBookOptional = storage.readDeliveryBook();
+            if (!deliveryBookOptional.isPresent()) {
+                logger.info("Creating a new data file " + storage.getDeliveryBookFilePath());
+            }
+            initialDeliveryData = deliveryBookOptional.orElseGet(SampleDeliveryDataUtil::getSampleDeliveryBook);
+        } catch (DataLoadingException e) {
+            logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
+                    + " Will be starting with an empty AddressBook.");
+            initialDeliveryData = new DeliveryBook();
+        }
+
+        return new ModelManager(initialAddressData, initialDeliveryData, userPrefs);
     }
 
     private void initLogging(Config config) {
