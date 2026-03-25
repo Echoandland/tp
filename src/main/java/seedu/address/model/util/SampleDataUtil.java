@@ -31,18 +31,18 @@ public class SampleDataUtil {
         Company[] companies = new Company[] {apple, dell, samsung, hp};
 
         Delivery[] deliveries = new Delivery[] {
-                new Delivery(new Product("iPhone"), apple,
-                        new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
-                        getTagSet("fragile")),
-                new Delivery(new Product("laptop"), dell,
-                        new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
-                        getTagSet("test")),
-                new Delivery(new Product("tablet"), samsung,
-                        new seedu.address.model.delivery.Address("313 Orchard Rd"),
-                        getTagSet("fragile")),
-                new Delivery(new Product("printer"), hp,
-                        new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
-                        getTagSet("heavy")),
+            new Delivery(new Product("iPhone"), apple,
+                new seedu.address.model.delivery.Address("78 Airport Blvd, #02-234"),
+                getTagSet("fragile")),
+            new Delivery(new Product("laptop"), dell,
+                new seedu.address.model.delivery.Address("Changi Business Park Central 1"),
+                getTagSet("test")),
+            new Delivery(new Product("tablet"), samsung,
+                new seedu.address.model.delivery.Address("313 Orchard Rd"),
+                getTagSet("fragile")),
+            new Delivery(new Product("printer"), hp,
+                new seedu.address.model.delivery.Address("750 Chai Chee Road, #01-01"),
+                getTagSet("heavy")),
         };
 
         return new SampleData(companies, deliveries);
