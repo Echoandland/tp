@@ -47,7 +47,7 @@ public class DeliveryCard extends UiPart<Region> {
         this.delivery = delivery;
         id.setText(displayedIndex + ". ");
         product.setText(delivery.getProduct().productName);
-        company.setText(delivery.getCompany().value);
+        company.setText(delivery.getCompany().getName().toString());
         address.setText(delivery.getAddress().value);
         delivery.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))

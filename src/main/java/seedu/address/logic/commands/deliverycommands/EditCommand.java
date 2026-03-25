@@ -22,8 +22,9 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.company.Company;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.delivery.Company;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -76,7 +77,7 @@ public class EditCommand extends Command {
         }
 
         Delivery deliveryToEdit = lastShownList.get(index.getZeroBased());
-        Delivery editedDelivery = createEditedDelivery(deliveryToEdit, editDeliveryDescriptor);
+        Delivery editedDelivery = createEditedDelivery(deliveryToEdit, editDeliveryDescriptor, model);
 
         if (!deliveryToEdit.isSameDelivery(editedDelivery) && model.hasDelivery(editedDelivery)) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
@@ -92,11 +93,21 @@ public class EditCommand extends Command {
      * edited with {@code editDeliveryDescriptor}.
      */
     private static Delivery createEditedDelivery(
-            Delivery deliveryToEdit, EditDeliveryDescriptor editDeliveryDescriptor) {
+            Delivery deliveryToEdit, EditDeliveryDescriptor editDeliveryDescriptor,
+            Model model) throws CommandException {
         assert deliveryToEdit != null;
 
         Product updatedProduct = editDeliveryDescriptor.getProduct().orElse(deliveryToEdit.getProduct());
-        Company updatedCompany = editDeliveryDescriptor.getCompany().orElse(deliveryToEdit.getCompany());
+        Company updatedCompany = deliveryToEdit.getCompany();
+
+        Optional<CompanyNameContainsKeywordsPredicate> companyOpt = editDeliveryDescriptor.getCompany();
+        if (!companyOpt.isEmpty()) {
+            model.updateFilteredCompanyList(companyOpt.get());
+            if (model.getFilteredCompanyList().isEmpty()) {
+                throw new CommandException("Company not found");
+            }
+            updatedCompany = model.getFilteredCompanyList().get(0);
+        }
         Address updatedAddress = editDeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
         Set<Tag> updatedTags = editDeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
 
@@ -133,7 +144,7 @@ public class EditCommand extends Command {
      */
     public static class EditDeliveryDescriptor {
         private Product product;
-        private Company company;
+        private CompanyNameContainsKeywordsPredicate company;
         private Address address;
         private Set<Tag> tags;
 
@@ -165,11 +176,11 @@ public class EditCommand extends Command {
             return Optional.ofNullable(product);
         }
 
-        public void setCompany(Company company) {
+        public void setCompany(CompanyNameContainsKeywordsPredicate company) {
             this.company = company;
         }
 
-        public Optional<Company> getCompany() {
+        public Optional<CompanyNameContainsKeywordsPredicate> getCompany() {
             return Optional.ofNullable(company);
         }
 

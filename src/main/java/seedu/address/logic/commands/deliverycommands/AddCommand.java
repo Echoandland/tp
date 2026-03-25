@@ -11,7 +11,13 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.company.Company;
+import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
+import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Product;
+import seedu.address.model.tag.Tag;
+import java.util.Set;
 
 /**
  * Adds a delivery to the address book.
@@ -35,19 +41,37 @@ public class AddCommand extends Command {
     public static final String MESSAGE_SUCCESS = "New delivery added: %1$s";
     public static final String MESSAGE_DUPLICATE_DELIVERY = "This delivery already exists in the address book";
 
-    private final Delivery toAdd;
+    private final Product product;
+    private final CompanyNameContainsKeywordsPredicate name;
+    private Address address;
+    private final Set<Tag> tagList;
 
     /**
      * Creates an AddCommand to add the specified {@code Delivery}.
      */
-    public AddCommand(Delivery delivery) {
-        requireNonNull(delivery);
-        toAdd = delivery;
+    public AddCommand(Product product, CompanyNameContainsKeywordsPredicate name, Address address, Set<Tag> tagList) {
+        this.product = product;
+        this.name = name;
+        this.address = address;
+        this.tagList = tagList;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        model.updateFilteredCompanyList(this.name);
+        if (model.getFilteredCompanyList().isEmpty()) {
+            throw new CommandException("Company not found");
+        }
+
+        Company company = model.getFilteredCompanyList().get(0);
+
+        if (this.address == null) {
+            this.address = new Address(company.getAddress().toString());
+        }
+
+        Delivery toAdd = new Delivery(this.product, company, this.address, this.tagList);
 
         if (model.hasDelivery(toAdd)) {
             throw new CommandException(MESSAGE_DUPLICATE_DELIVERY);
@@ -68,13 +92,23 @@ public class AddCommand extends Command {
         }
 
         AddCommand otherAddCommand = (AddCommand) other;
-        return toAdd.equals(otherAddCommand.toAdd);
+        boolean sameAddress = false;
+
+        if (this.address == null) {
+            sameAddress = otherAddCommand.address == null;
+        }
+
+        return this.product.equals(otherAddCommand.product) && this.name == otherAddCommand.name
+                && sameAddress && this.tagList.equals(otherAddCommand.tagList);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("toAdd", toAdd)
+                .add("product", product)
+                .add("company", name)
+                .add("address", address)
+                .add("tag", tagList)
                 .toString();
     }
 }
