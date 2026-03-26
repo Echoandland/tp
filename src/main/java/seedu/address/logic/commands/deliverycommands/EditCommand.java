@@ -106,17 +106,24 @@ public class EditCommand extends Command {
 
         Optional<CompanyNameContainsKeywordsPredicate> companyOpt = editDeliveryDescriptor.getCompany();
         if (!companyOpt.isEmpty()) {
-            model.updateFilteredCompanyList(companyOpt.get());
-            if (model.getFilteredCompanyList().isEmpty()) {
+            updatedCompany = findMatchingCompany(model, companyOpt.get());
+            if (updatedCompany == null) {
                 throw new CommandException("Company not found");
             }
-            updatedCompany = model.getFilteredCompanyList().get(0);
         }
         Deadline updatedDeadline = editDeliveryDescriptor.getDeadline().orElse(deliveryToEdit.getDeadline());
         Address updatedAddress = editDeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
         Set<Tag> updatedTags = editDeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
 
         return new Delivery(updatedProduct, updatedCompany, updatedDeadline, updatedAddress, updatedTags);
+    }
+
+    private static Company findMatchingCompany(Model model, CompanyNameContainsKeywordsPredicate predicate) {
+        String companyName = predicate.getKeywords().get(0);
+        return model.getAddressBook().getCompanyList().stream()
+                .filter(company -> company.getName().toString().equalsIgnoreCase(companyName))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

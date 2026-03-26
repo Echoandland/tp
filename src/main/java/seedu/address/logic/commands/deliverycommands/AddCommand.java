@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
@@ -68,12 +69,10 @@ public class AddCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        model.updateFilteredCompanyList(this.name);
-        if (model.getFilteredCompanyList().isEmpty()) {
+        Company company = findMatchingCompany(model, name);
+        if (company == null) {
             throw new CommandException("Company not found");
         }
-
-        Company company = model.getFilteredCompanyList().get(0);
 
         if (this.address == null) {
             this.address = new Address(company.getAddress().toString());
@@ -100,14 +99,11 @@ public class AddCommand extends Command {
         }
 
         AddCommand otherAddCommand = (AddCommand) other;
-        boolean sameAddress = false;
-
-        if (this.address == null) {
-            sameAddress = otherAddCommand.address == null;
-        }
-
-        return this.product.equals(otherAddCommand.product) && this.name == otherAddCommand.name
-                && sameAddress && this.tagList.equals(otherAddCommand.tagList);
+        return product.equals(otherAddCommand.product)
+                && name.equals(otherAddCommand.name)
+                && deadline.equals(otherAddCommand.deadline)
+                && Objects.equals(address, otherAddCommand.address)
+                && tagList.equals(otherAddCommand.tagList);
     }
 
     @Override
@@ -115,8 +111,17 @@ public class AddCommand extends Command {
         return new ToStringBuilder(this)
                 .add("product", product)
                 .add("company", name)
+                .add("deadline", deadline)
                 .add("address", address)
                 .add("tag", tagList)
                 .toString();
+    }
+
+    private static Company findMatchingCompany(Model model, CompanyNameContainsKeywordsPredicate predicate) {
+        String companyName = predicate.getKeywords().get(0);
+        return model.getAddressBook().getCompanyList().stream()
+                .filter(company -> company.getName().toString().equalsIgnoreCase(companyName))
+                .findFirst()
+                .orElse(null);
     }
 }

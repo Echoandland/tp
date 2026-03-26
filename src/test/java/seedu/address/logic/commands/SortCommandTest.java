@@ -52,8 +52,7 @@ public class SortCommandTest {
         SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
         CommandResult result = command.execute(model);
 
-        assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2,
-                "seedu.address.model.company.CompanyNameContainsKeywordsPredicate{keywords=[Dell]}"),
+        assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2, "Dell"),
                 result.getFeedbackToUser());
         assertEquals(2, model.getFilteredDeliveryList().size());
         assertEquals(earlierDell, model.getFilteredDeliveryList().get(0));
@@ -65,8 +64,7 @@ public class SortCommandTest {
     public void execute_missingCompanyDelivery_throwsCommandException() {
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
         SortCommand command = new SortCommand(new CompanyNameContainsKeywordsPredicate(List.of("Dell")));
-        String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY,
-                "seedu.address.model.company.CompanyNameContainsKeywordsPredicate{keywords=[Dell]}");
+        String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY, "Dell");
 
         assertThrows(CommandException.class, expectedMessage, () -> command.execute(model));
     }

@@ -41,20 +41,21 @@ public class SortCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        Predicate<Delivery> matchesCompany = delivery ->
-                name.test(delivery.getCompany());
+        String companyName = getCompanyName();
+        Predicate<Delivery> matchesCompany =
+                delivery -> delivery.getCompany().getName().toString().equalsIgnoreCase(companyName);
 
         boolean hasMatchingDelivery = model.getDeliveryBook().getDeliveryList().stream()
-                .anyMatch(delivery -> name.test(delivery.getCompany()));
+                .anyMatch(matchesCompany);
         if (!hasMatchingDelivery) {
-            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, name));
+            throw new CommandException(String.format(MESSAGE_NO_DELIVERIES_FOR_COMPANY, companyName));
         }
 
         model.sortDeliveriesByDeadline(matchesCompany);
         model.updateFilteredDeliveryList(matchesCompany);
 
         return new CommandResult(
-                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), name));
+                String.format(MESSAGE_SORT_SUCCESS, model.getFilteredDeliveryList().size(), companyName));
     }
 
     @Override
@@ -74,7 +75,11 @@ public class SortCommand extends Command {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .add("company", name)
+                .add("company", getCompanyName())
                 .toString();
+    }
+
+    private String getCompanyName() {
+        return name.getKeywords().get(0);
     }
 }

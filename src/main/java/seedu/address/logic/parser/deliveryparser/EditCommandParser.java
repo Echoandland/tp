@@ -58,6 +58,7 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (argMultimap.getValue(PREFIX_COMPANY).isPresent()) {
             CompanyNameContainsKeywordsPredicate company =
                     ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+            editDeliveryDescriptor.setCompany(company);
         }
         if (argMultimap.getValue(PREFIX_DEADLINE).isPresent()) {
             editDeliveryDescriptor.setDeadline(ParserUtil.parseDeadline(argMultimap.getValue(PREFIX_DEADLINE).get()));
