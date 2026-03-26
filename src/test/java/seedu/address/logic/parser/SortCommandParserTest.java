@@ -5,6 +5,8 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailur
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.model.util.SampleDataUtil.getTagSet;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.Messages;
@@ -15,8 +17,6 @@ import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
-
-import java.util.List;
 
 public class SortCommandParserTest {
 
