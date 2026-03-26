@@ -31,7 +31,8 @@ public class SortCommandParser implements Parser<SortCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_COMPANY);
-        CompanyNameContainsKeywordsPredicate company = ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+        CompanyNameContainsKeywordsPredicate company =
+                ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
         return new SortCommand(company);
     }
 
