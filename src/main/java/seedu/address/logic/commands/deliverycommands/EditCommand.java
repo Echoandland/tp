@@ -3,6 +3,7 @@ package seedu.address.logic.commands.deliverycommands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_DELIVERIES;
@@ -25,6 +26,7 @@ import seedu.address.model.Model;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Address;
+import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -42,11 +44,13 @@ public class EditCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + "[" + PREFIX_PRODUCT + "PRODUCT] "
             + "[" + PREFIX_COMPANY + "delivery] "
+            + "[" + PREFIX_DEADLINE + "DEADLINE] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PRODUCT + "Laptop"
-            + PREFIX_COMPANY + "Dell";
+            + PREFIX_COMPANY + "Dell "
+            + PREFIX_DEADLINE + "2026-03-25 14:30";
 
     public static final String MESSAGE_EDIT_DELIVERY_SUCCESS = "Edited Delivery: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
@@ -108,10 +112,11 @@ public class EditCommand extends Command {
             }
             updatedCompany = model.getFilteredCompanyList().get(0);
         }
+        Deadline updatedDeadline = editDeliveryDescriptor.getDeadline().orElse(deliveryToEdit.getDeadline());
         Address updatedAddress = editDeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
         Set<Tag> updatedTags = editDeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
 
-        return new Delivery(updatedProduct, updatedCompany, updatedAddress, updatedTags);
+        return new Delivery(updatedProduct, updatedCompany, updatedDeadline, updatedAddress, updatedTags);
     }
 
     @Override
@@ -145,6 +150,7 @@ public class EditCommand extends Command {
     public static class EditDeliveryDescriptor {
         private Product product;
         private CompanyNameContainsKeywordsPredicate company;
+        private Deadline deadline;
         private Address address;
         private Set<Tag> tags;
 
@@ -157,6 +163,7 @@ public class EditCommand extends Command {
         public EditDeliveryDescriptor(EditDeliveryDescriptor toCopy) {
             setProduct(toCopy.product);
             setCompany(toCopy.company);
+            setDeadline(toCopy.deadline);
             setAddress(toCopy.address);
             setTags(toCopy.tags);
         }
@@ -165,7 +172,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(product, company, address, tags);
+            return CollectionUtil.isAnyNonNull(product, company, deadline, address, tags);
         }
 
         public void setProduct(Product product) {
@@ -182,6 +189,14 @@ public class EditCommand extends Command {
 
         public Optional<CompanyNameContainsKeywordsPredicate> getCompany() {
             return Optional.ofNullable(company);
+        }
+
+        public void setDeadline(Deadline deadline) {
+            this.deadline = deadline;
+        }
+
+        public Optional<Deadline> getDeadline() {
+            return Optional.ofNullable(deadline);
         }
 
         public void setAddress(Address address) {
@@ -223,6 +238,7 @@ public class EditCommand extends Command {
             EditDeliveryDescriptor otherEditDeliveryDescriptor = (EditDeliveryDescriptor) other;
             return Objects.equals(product, otherEditDeliveryDescriptor.product)
                     && Objects.equals(company, otherEditDeliveryDescriptor.company)
+                    && Objects.equals(deadline, otherEditDeliveryDescriptor.deadline)
                     && Objects.equals(address, otherEditDeliveryDescriptor.address)
                     && Objects.equals(tags, otherEditDeliveryDescriptor.tags);
         }
@@ -232,6 +248,7 @@ public class EditCommand extends Command {
             return new ToStringBuilder(this)
                     .add("product", product)
                     .add("company", company)
+                    .add("deadline", deadline)
                     .add("address", address)
                     .add("tags", tags)
                     .toString();

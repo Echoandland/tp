@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Address;
+import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -26,6 +27,7 @@ class JsonAdaptedDelivery {
 
     private final String product;
     private final String company;
+    private final String deadline;
     private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
@@ -35,10 +37,12 @@ class JsonAdaptedDelivery {
     @JsonCreator
     public JsonAdaptedDelivery(@JsonProperty("product") String product,
                                @JsonProperty("company") String company,
+                               @JsonProperty("deadline") String deadline,
                                @JsonProperty("address") String address,
                                @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.product = product;
         this.company = company;
+        this.deadline = deadline;
         this.address = address;
         if (tags != null) {
             this.tags.addAll(tags);
@@ -51,6 +55,7 @@ class JsonAdaptedDelivery {
     public JsonAdaptedDelivery(Delivery source) {
         product = source.getProduct().productName;
         company = source.getCompany().getName().toString();
+        deadline = source.getDeadline().toStorageString();
         address = source.getAddress().value;
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -90,6 +95,15 @@ class JsonAdaptedDelivery {
                         "Unable to find Company for this Delivery"
                 ));
 
+        if (deadline == null) {
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
+        }
+        if (!Deadline.isValidDeadline(deadline)) {
+            throw new IllegalValueException(Deadline.MESSAGE_CONSTRAINTS);
+        }
+        final Deadline modelDeadline = new Deadline(deadline);
+
         if (address == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
         }
@@ -99,7 +113,7 @@ class JsonAdaptedDelivery {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(companyTags);
-        return new Delivery(modelProduct, modelCompany, modelAddress, modelTags);
+        return new Delivery(modelProduct, modelCompany, modelDeadline, modelAddress, modelTags);
     }
 
 }

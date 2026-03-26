@@ -15,6 +15,7 @@ import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
+import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
@@ -145,6 +146,21 @@ public class ParserUtil {
         }
         List<String> keyword = List.of(trimmedCompanyName);
         return new CompanyNameContainsKeywordsPredicate(keyword);
+    }
+
+    /**
+     * Parses a {@code String deadline} into a {@code Deadline}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code deadline} is invalid.
+     */
+    public static Deadline parseDeadline(String deadline) throws ParseException {
+        requireNonNull(deadline);
+        String trimmedDeadline = deadline.trim();
+        if (!Deadline.isValidDeadline(trimmedDeadline)) {
+            throw new ParseException(Deadline.MESSAGE_CONSTRAINTS);
+        }
+        return new Deadline(trimmedDeadline);
     }
 
     /**
