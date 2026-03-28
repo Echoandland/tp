@@ -35,8 +35,6 @@ public class DeliveryCard extends UiPart<Region> {
     @FXML
     private Label company;
     @FXML
-    private Label deadline;
-    @FXML
     private Label address;
     @FXML
     private FlowPane tags;
@@ -49,8 +47,7 @@ public class DeliveryCard extends UiPart<Region> {
         this.delivery = delivery;
         id.setText(displayedIndex + ". ");
         product.setText(delivery.getProduct().productName);
-        company.setText(delivery.getCompany().getName().toString());
-        deadline.setText("Deadline: " + delivery.getDeadline());
+        company.setText(delivery.getCompany().value);
         address.setText(delivery.getAddress().value);
         delivery.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))

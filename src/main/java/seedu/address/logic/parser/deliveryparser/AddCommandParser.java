@@ -3,7 +3,6 @@ package seedu.address.logic.parser.deliveryparser;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_DEADLINE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRODUCT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
@@ -17,9 +16,9 @@ import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.delivery.Deadline;
+import seedu.address.model.delivery.Company;
+import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
 
@@ -35,23 +34,22 @@ public class AddCommandParser implements Parser<AddCommand> {
      */
     public AddCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE, PREFIX_ADDRESS,
-                        PREFIX_TAG);
+                ArgumentTokenizer.tokenize(args, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS, PREFIX_TAG);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE, PREFIX_ADDRESS)
+        if (!arePrefixesPresent(argMultimap, PREFIX_PRODUCT, PREFIX_ADDRESS, PREFIX_COMPANY)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
         }
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_DEADLINE, PREFIX_ADDRESS);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PRODUCT, PREFIX_COMPANY, PREFIX_ADDRESS);
         Product product = ParserUtil.parseProduct(argMultimap.getValue(PREFIX_PRODUCT).get());
-        Deadline deadline = ParserUtil.parseDeadline(argMultimap.getValue(PREFIX_DEADLINE).get());
-        CompanyNameContainsKeywordsPredicate company =
-                ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
+        Company company = ParserUtil.parseCompany(argMultimap.getValue(PREFIX_COMPANY).get());
         Address address = ParserUtil.parseDeliveryAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        return new AddCommand(product, company, deadline, address, tagList);
+        Delivery delivery = new Delivery(product, company, address, tagList);
+
+        return new AddCommand(delivery);
     }
 
     /**

@@ -9,11 +9,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javafx.collections.ObservableList;
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Address;
-import seedu.address.model.delivery.Deadline;
+import seedu.address.model.delivery.Company;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 import seedu.address.model.tag.Tag;
@@ -27,7 +25,6 @@ class JsonAdaptedDelivery {
 
     private final String product;
     private final String company;
-    private final String deadline;
     private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
@@ -37,12 +34,10 @@ class JsonAdaptedDelivery {
     @JsonCreator
     public JsonAdaptedDelivery(@JsonProperty("product") String product,
                                @JsonProperty("company") String company,
-                               @JsonProperty("deadline") String deadline,
                                @JsonProperty("address") String address,
                                @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.product = product;
         this.company = company;
-        this.deadline = deadline;
         this.address = address;
         if (tags != null) {
             this.tags.addAll(tags);
@@ -54,8 +49,7 @@ class JsonAdaptedDelivery {
      */
     public JsonAdaptedDelivery(Delivery source) {
         product = source.getProduct().productName;
-        company = source.getCompany().getName().toString();
-        deadline = source.getDeadline().toStorageString();
+        company = source.getCompany().value;
         address = source.getAddress().value;
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -67,8 +61,7 @@ class JsonAdaptedDelivery {
      *
      * @throws IllegalValueException if there were any data constraints violated in the adapted delivery.
      */
-    public Delivery toModelType(ObservableList<seedu.address.model.company.Company> existingCompanies)
-            throws IllegalValueException {
+    public Delivery toModelType() throws IllegalValueException {
         final List<Tag> companyTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tags) {
             companyTags.add(tag.toModelType());
@@ -85,24 +78,10 @@ class JsonAdaptedDelivery {
         if (company == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Company.class.getSimpleName()));
         }
-        if (!company.matches("[^\\s].*")) {
-            throw new IllegalValueException("Company should be a string that does not begin with a whitespace");
+        if (!Company.isValidCompany(company)) {
+            throw new IllegalValueException(Company.MESSAGE_CONSTRAINTS);
         }
-        seedu.address.model.company.Company modelCompany = existingCompanies.stream()
-                .filter(c -> c.getName().toString().equalsIgnoreCase(company))
-                .findFirst()
-                .orElseThrow(() -> new IllegalValueException(
-                        "Unable to find Company for this Delivery"
-                ));
-
-        if (deadline == null) {
-            throw new IllegalValueException(
-                    String.format(MISSING_FIELD_MESSAGE_FORMAT, Deadline.class.getSimpleName()));
-        }
-        if (!Deadline.isValidDeadline(deadline)) {
-            throw new IllegalValueException(Deadline.MESSAGE_CONSTRAINTS);
-        }
-        final Deadline modelDeadline = new Deadline(deadline);
+        final Company modelCompany = new Company(company);
 
         if (address == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Address.class.getSimpleName()));
@@ -113,7 +92,7 @@ class JsonAdaptedDelivery {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(companyTags);
-        return new Delivery(modelProduct, modelCompany, modelDeadline, modelAddress, modelTags);
+        return new Delivery(modelProduct, modelCompany, modelAddress, modelTags);
     }
 
 }

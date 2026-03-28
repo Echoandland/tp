@@ -113,8 +113,6 @@ public interface Model {
 
     void setDelivery(Delivery delivery, Delivery editedDelivery);
 
-    void sortDeliveriesByDeadline(Predicate<Delivery> predicate);
-
     ObservableList<Delivery> getFilteredDeliveryList();
 
     void updateFilteredDeliveryList(Predicate<Delivery> predicate);

@@ -55,7 +55,6 @@ public class UnmarkCommand extends Command {
         Delivery unmarkedDelivery = new Delivery(
                 deliveryToUnmark.getProduct(),
                 deliveryToUnmark.getCompany(),
-                deliveryToUnmark.getDeadline(),
                 deliveryToUnmark.getAddress(),
                 newTags
         );

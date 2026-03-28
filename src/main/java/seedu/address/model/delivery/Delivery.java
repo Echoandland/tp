@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
-import seedu.address.model.company.Company;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -20,7 +19,6 @@ public class Delivery {
     // Identity fields
     private final Product product;
     private final Company company;
-    private final Deadline deadline;
 
     // Data fields
     private final Address address;
@@ -29,11 +27,10 @@ public class Delivery {
     /**
      * Every field must be present and not null.
      */
-    public Delivery(Product product, Company company, Deadline deadline, Address address, Set<Tag> tags) {
-        requireAllNonNull(product, company, deadline, address, tags);
+    public Delivery(Product product, Company company, Address address, Set<Tag> tags) {
+        requireAllNonNull(product, company, address, tags);
         this.product = product;
         this.company = company;
-        this.deadline = deadline;
         this.address = address;
         this.tags.addAll(tags);
     }
@@ -44,10 +41,6 @@ public class Delivery {
 
     public Company getCompany() {
         return company;
-    }
-
-    public Deadline getDeadline() {
-        return deadline;
     }
 
     public Address getAddress() {
@@ -72,9 +65,7 @@ public class Delivery {
         }
 
         return otherDelivery != null
-                && otherDelivery.getProduct().equals(getProduct())
-                && otherDelivery.getCompany().equals(getCompany())
-                && otherDelivery.getDeadline().equals(getDeadline());
+                && otherDelivery.getProduct().equals(getProduct());
     }
 
     /**
@@ -95,7 +86,6 @@ public class Delivery {
         Delivery otherDelivery = (Delivery) other;
         return product.equals(otherDelivery.product)
                 && company.equals(otherDelivery.company)
-                && deadline.equals(otherDelivery.deadline)
                 && address.equals(otherDelivery.address)
                 && tags.equals(otherDelivery.tags);
     }
@@ -103,7 +93,7 @@ public class Delivery {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(product, company, deadline, address, tags);
+        return Objects.hash(product, company, address, tags);
     }
 
     @Override
@@ -111,7 +101,6 @@ public class Delivery {
         return new ToStringBuilder(this)
                 .add("product", product)
                 .add("company", company)
-                .add("deadline", deadline)
                 .add("address", address)
                 .add("tags", tags)
                 .toString();

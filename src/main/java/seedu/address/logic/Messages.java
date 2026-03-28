@@ -57,15 +57,12 @@ public class Messages {
      */
     public static String format(Delivery delivery) {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Product: ")
-                .append(delivery.getProduct())
-                .append("; Company: ")
+        builder.append(delivery.getProduct())
+                .append("; Product: ")
                 .append(delivery.getCompany())
-                .append("; Deadline: ")
-                .append(delivery.getDeadline())
-                .append("; Address: ")
+                .append("; Company: ")
                 .append(delivery.getAddress())
-                .append("; Tags: ");
+                .append("; Address: ");
         delivery.getTags().forEach(builder::append);
         return builder.toString();
     }

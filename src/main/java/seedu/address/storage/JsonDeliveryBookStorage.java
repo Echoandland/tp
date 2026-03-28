@@ -7,14 +7,12 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import javafx.collections.ObservableList;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.exceptions.DataLoadingException;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.commons.util.FileUtil;
 import seedu.address.commons.util.JsonUtil;
 import seedu.address.model.ReadOnlyDeliveryBook;
-import seedu.address.model.company.Company;
 
 /**
  * A class to access deliveryBook data stored as a json file on the hard disk.
@@ -34,19 +32,17 @@ public class JsonDeliveryBookStorage implements DeliveryBookStorage {
     }
 
     @Override
-    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(ObservableList<Company> existingCompanies)
-            throws DataLoadingException {
-        return readDeliveryBook(filePath, existingCompanies);
+    public Optional<ReadOnlyDeliveryBook> readDeliveryBook() throws DataLoadingException {
+        return readDeliveryBook(filePath);
     }
 
     /**
-     * Similar to {@link #readDeliveryBook(ObservableList)}.
+     * Similar to {@link #readDeliveryBook()}.
      *
      * @param filePath location of the data. Cannot be null.
      * @throws DataLoadingException if loading the data from storage failed.
      */
-    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath, ObservableList<Company> existingCompanies)
-            throws DataLoadingException {
+    public Optional<ReadOnlyDeliveryBook> readDeliveryBook(Path filePath) throws DataLoadingException {
         requireNonNull(filePath);
 
         Optional<JsonSerializableDeliveryBook> jsonDeliveryBook = JsonUtil.readJsonFile(
@@ -56,7 +52,7 @@ public class JsonDeliveryBookStorage implements DeliveryBookStorage {
         }
 
         try {
-            return Optional.of(jsonDeliveryBook.get().toModelType(existingCompanies));
+            return Optional.of(jsonDeliveryBook.get().toModelType());
         } catch (IllegalValueException ive) {
             logger.info("Illegal values found in " + filePath + ": " + ive.getMessage());
             throw new DataLoadingException(ive);
