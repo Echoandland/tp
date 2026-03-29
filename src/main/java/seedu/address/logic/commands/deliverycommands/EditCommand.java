@@ -25,7 +25,6 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
-import seedu.address.model.delivery.Address;
 import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
@@ -45,7 +44,6 @@ public class EditCommand extends Command {
             + "[" + PREFIX_PRODUCT + "PRODUCT] "
             + "[" + PREFIX_COMPANY + "delivery] "
             + "[" + PREFIX_DEADLINE + "DEADLINE] "
-            + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PRODUCT + "Laptop"
@@ -112,10 +110,9 @@ public class EditCommand extends Command {
             }
         }
         Deadline updatedDeadline = editDeliveryDescriptor.getDeadline().orElse(deliveryToEdit.getDeadline());
-        Address updatedAddress = editDeliveryDescriptor.getAddress().orElse(deliveryToEdit.getAddress());
         Set<Tag> updatedTags = editDeliveryDescriptor.getTags().orElse(deliveryToEdit.getTags());
 
-        return new Delivery(updatedProduct, updatedCompany, updatedDeadline, updatedAddress, updatedTags);
+        return new Delivery(updatedProduct, updatedCompany, updatedDeadline, updatedTags);
     }
 
     private static Company findMatchingCompany(Model model, CompanyNameContainsKeywordsPredicate predicate) {
@@ -158,7 +155,6 @@ public class EditCommand extends Command {
         private Product product;
         private CompanyNameContainsKeywordsPredicate company;
         private Deadline deadline;
-        private Address address;
         private Set<Tag> tags;
 
         public EditDeliveryDescriptor() {}
@@ -171,7 +167,6 @@ public class EditCommand extends Command {
             setProduct(toCopy.product);
             setCompany(toCopy.company);
             setDeadline(toCopy.deadline);
-            setAddress(toCopy.address);
             setTags(toCopy.tags);
         }
 
@@ -179,7 +174,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(product, company, deadline, address, tags);
+            return CollectionUtil.isAnyNonNull(product, company, deadline, tags);
         }
 
         public void setProduct(Product product) {
@@ -206,13 +201,6 @@ public class EditCommand extends Command {
             return Optional.ofNullable(deadline);
         }
 
-        public void setAddress(Address address) {
-            this.address = address;
-        }
-
-        public Optional<Address> getAddress() {
-            return Optional.ofNullable(address);
-        }
 
         /**
          * Sets {@code tags} to this object's {@code tags}.
@@ -246,7 +234,6 @@ public class EditCommand extends Command {
             return Objects.equals(product, otherEditDeliveryDescriptor.product)
                     && Objects.equals(company, otherEditDeliveryDescriptor.company)
                     && Objects.equals(deadline, otherEditDeliveryDescriptor.deadline)
-                    && Objects.equals(address, otherEditDeliveryDescriptor.address)
                     && Objects.equals(tags, otherEditDeliveryDescriptor.tags);
         }
 
@@ -256,7 +243,6 @@ public class EditCommand extends Command {
                     .add("product", product)
                     .add("company", company)
                     .add("deadline", deadline)
-                    .add("address", address)
                     .add("tags", tags)
                     .toString();
         }
