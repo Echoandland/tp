@@ -29,6 +29,9 @@ public class DeliveryRouterService {
     private final GeocodingService geocodingService;
     private final OptimizationService optimizationService;
 
+    /**
+     * Creates instance that contains the necessary routing features
+     */
     public DeliveryRouterService() {
         OrsHttpClient client = new OrsHttpClient();
         this.geocodingService = new GeocodingService(client);

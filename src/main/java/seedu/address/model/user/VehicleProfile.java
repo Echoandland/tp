@@ -20,12 +20,21 @@ public class VehicleProfile {
 
     public final String value;
 
+    /**
+     * Creates vehicle profile using the string argument given
+     * @param profile
+     */
     public VehicleProfile(String profile) {
         requireNonNull(profile);
         checkArgument(isValidProfile(profile), MESSAGE_CONSTRAINTS);
         this.value = profile;
     }
 
+    /**
+     * Checks if instance of profile is valid
+     * @param test
+     * @return
+     */
     public static boolean isValidProfile(String test) {
         for (String p : VALID_PROFILES) {
             if (p.equals(test)) {

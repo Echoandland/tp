@@ -17,6 +17,11 @@ public class User implements ReadOnlyUser {
     private final Company company;
     private final Vehicle vehicle;
 
+    /**
+     * Creates user with a starting location of a Company and a given Vehicle
+     * @param company
+     * @param vehicle
+     */
     public User(Company company, Vehicle vehicle) {
         requireAllNonNull(company, vehicle);
         this.company = company;

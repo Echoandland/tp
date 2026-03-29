@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -14,10 +17,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.Model;
 import seedu.address.model.delivery.Delivery;
@@ -45,6 +44,11 @@ public class RoutePanel extends UiPart<Region> {
     @FXML private Label routeStatusLabel;
     @FXML private StackPane mapPlaceholder;
 
+    /**
+     * Creates map display of route
+     * @param deliveryList
+     * @param model
+     */
     public RoutePanel(ObservableList<Delivery> deliveryList, Model model) {
         super(FXML);
         this.deliveryList = deliveryList;

@@ -11,6 +11,11 @@ public class RouteResult {
     public final List<VehicleRoute> routes;
     public final List<Integer> unassigned;
 
+    /**
+     * Creates instance of the route result returned from the route optimization request
+     * @param routes
+     * @param unassigned
+     */
     public RouteResult(List<VehicleRoute> routes, List<Integer> unassigned) {
         this.routes = routes;
         this.unassigned = unassigned;
@@ -26,6 +31,14 @@ public class RouteResult {
         public final double depotLat;
         public final double depotLon;
 
+        /**
+         * Creates vehicle route using locations of the different stops
+         * @param vehicleId
+         * @param stops
+         * @param geometry
+         * @param depotLat
+         * @param depotLon
+         */
         public VehicleRoute(int vehicleId, List<Stop> stops, List<double[]> geometry,
                             double depotLat, double depotLon) {
             this.vehicleId = vehicleId;
@@ -45,6 +58,15 @@ public class RouteResult {
         public final int arrivalTime;
         public final String arrivalTimeFormatted;
 
+        /**
+         * Creates a stop display given by the coordinates and time
+         * @param deliveryIndex
+         * @param address
+         * @param lat
+         * @param lon
+         * @param arrivalTime
+         * @param arrivalTimeFormatted
+         */
         public Stop(int deliveryIndex, String address, double lat, double lon,
                     int arrivalTime, String arrivalTimeFormatted) {
             this.deliveryIndex = deliveryIndex;

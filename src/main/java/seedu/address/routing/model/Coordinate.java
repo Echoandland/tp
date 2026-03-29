@@ -6,6 +6,14 @@ public class Coordinate {
     public final double lat;
     public final String originalAddress;
 
+    /**
+     * Creates Coordinate instance with coordinate and address of a location
+     *
+     * @param lon
+     * @param lat
+     * @param originalAddress
+     */
+
     public Coordinate(double lon, double lat, String originalAddress) {
         this.lon = lon;
         this.lat = lat;

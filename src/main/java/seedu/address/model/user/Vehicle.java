@@ -14,6 +14,10 @@ public class Vehicle {
 
     private final VehicleProfile profile;
 
+    /**
+     * Creates a vehicle using the given profile
+     * @param profile
+     */
     public Vehicle(VehicleProfile profile) {
         requireAllNonNull(profile);
         this.profile = profile;

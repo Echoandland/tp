@@ -28,6 +28,18 @@ public class OptimizationService {
         this.client = client;
     }
 
+    /**
+     * Builds a request to the API to obtain the optimized route for the given locations
+     *
+     * @param vehicleCoords
+     * @param deliveryCoords
+     * @param timeWindows
+     * @param serviceDurations
+     * @param vehicleProfile
+     * @return
+     * @throws IOException
+     */
+
     public RouteResult optimize(
             List<Coordinate> vehicleCoords,
             List<Coordinate> deliveryCoords,
@@ -158,13 +170,11 @@ public class OptimizationService {
     }
 
     /**
-     * Decodes an ORS-encoded polyline string into [lon, lat] pairs.
-     * Uses ORS's own algorithm (precision 1e5, no elevation).
-     * Source: https://github.com/GIScience/openrouteservice-docs
-     */
-    /**
      * Decodes a standard Google-encoded polyline string into [lon, lat] pairs.
      * ORS uses standard Google polyline encoding (precision 1e5).
+     *
+     * @param encodedGeometry
+     * @return
      */
     private List<double[]> decodePolyline(String encodedGeometry) {
         List<double[]> points = new ArrayList<>();

@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.Logic;
@@ -111,7 +110,9 @@ public class MainWindow extends UiPart<Stage> {
 
     private void configureListTabs() {
         listTabPane.getSelectionModel().selectedIndexProperty().addListener((unused, oldValue, newValue) -> {
-            if (newValue == null) return;
+            if (newValue == null) {
+                return;
+            }
             model.setCompanyPackage(newValue.intValue() == 0);
         });
         syncSelectedTabWithMode();
@@ -130,6 +131,9 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
+    /**
+     * Creates help window
+     */
     @FXML
     public void handleHelp() {
         if (!helpWindow.isShowing()) {
@@ -165,8 +169,12 @@ public class MainWindow extends UiPart<Stage> {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-            if (commandResult.isShowHelp()) handleHelp();
-            if (commandResult.isExit()) handleExit();
+            if (commandResult.isShowHelp()) {
+                handleHelp();
+            }
+            if (commandResult.isExit()) {
+                handleExit();
+            }
             syncSelectedTabWithMode();
             return commandResult;
         } catch (CommandException | ParseException e) {

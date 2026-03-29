@@ -20,11 +20,19 @@ public class UserPrefs implements ReadOnlyUserPrefs {
 
     public UserPrefs() {}
 
+    /**
+     * Creates UserPrefs Instance
+     * @param userPrefs
+     */
     public UserPrefs(ReadOnlyUserPrefs userPrefs) {
         this();
         resetData(userPrefs);
     }
 
+    /**
+     * Resets user data by creating a object for all fields
+     * @param newUserPrefs
+     */
     public void resetData(ReadOnlyUserPrefs newUserPrefs) {
         requireNonNull(newUserPrefs);
         setGuiSettings(newUserPrefs.getGuiSettings());
