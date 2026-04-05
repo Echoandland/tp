@@ -1,0 +1,46 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant "s:SwitchCommand" as SwitchCommand LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(switch)
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand(switch)
+activate AddressBookParser
+
+create SwitchCommand
+AddressBookParser -> SwitchCommand
+activate SwitchCommand
+
+SwitchCommand --> AddressBookParser
+deactivate SwitchCommand
+
+AddressBookParser --> LogicManager : s
+deactivate AddressBookParser
+
+LogicManager -> SwitchCommand : execute()
+activate SwitchCommand
+
+SwitchCommand -> Model : setCompanyPackage(false)
+activate Model
+
+Model --> SwitchCommand
+deactivate Model
+
+SwitchCommand --> LogicManager : result
+deactivate SwitchCommand
+SwitchCommand -[hidden]-> LogicManager : result
+destroy SwitchCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
