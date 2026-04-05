@@ -1,0 +1,16 @@
+@startuml
+!include style.puml
+skinparam ClassFontColor #000000
+skinparam ClassBorderColor #000000
+skinparam ClassBackgroundColor #FFFFAA
+
+title Initial state
+
+package Parser {
+    class State1 as "<u>addressBookParser</u>"
+    class State2 as "<u>deliveryBookParser</u>"
+}
+
+class Pointer as "Current State" #FFFFFF
+Pointer -up-> State1
+@end

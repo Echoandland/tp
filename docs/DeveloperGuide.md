@@ -155,179 +155,103 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### Switch book feature
-### Implementation
+### Delivery-Company dependency
 
-MyCelia supports two operating modes: the Company Book and the Delivery Book.
-This feature is facilitated by a mode flag stored in the Model component through Model#getCompanyPackage() and Model#setCompanyPackage(boolean). The flag determines which parser and book-specific command set should be active at a given time.
+#### Implementation
 
-At the user level, the command used is switch. In the Company Book, companycommands.SwitchCommand sets the mode flag to false, which switches the application to the Delivery Book. The User Guide also states that this same command toggles between the two books, and that the UI tabs provide an equivalent interaction.
+To facilitate deliveries to an assigned company, MyCelia allows the user to create deliveries with reference to an existing company.
 
-This design allows MyCelia to reuse a single command box and window while exposing two different workflows. Instead of launching separate applications or windows, the system keeps both books in memory and changes only the active context. This keeps interaction fast and matches the product’s keyboard-first design.
+Internally, `AddCommand` does not store only a raw company name. Instead, it stores a `CompanyNameContainsKeywordsPredicate` and uses it during execution to search the existing Company Book for a matching company. 
 
-Example
+This design allows for changes within a `Company` to be reflected on the deliveries, reducing the need for users to manually edit every delivery if there is a change to the company.
 
-Step 1. The user is currently viewing the Company Book.
+Example:
 
-Step 2. The user enters switch.
+Step 1: User enters `add p/Laptop c/Dell dl/2026-03-25 14:30 t/urgent`
 
-Step 3. SwitchCommand#execute(Model) is called.
+Step 2: Command is parsed by `DeliveryBookParser` and `AddCommand#execute(Model)` is called
 
-Step 4. The command updates the model mode flag by calling model.setCompanyPackage(false).
+Step 3: `AddCommand#findMatchingCompany(Model, CompanyNameContainsKeywordsPredicate)` is called which filters the existing companies by names.
 
-Step 5. The UI updates to show the Delivery Book instead.
+Step 3a: If existing company with matching name is found, the `Company` instance will be passed on as a return value.
 
-Design considerations
+Step 3b: If there are no existing company with a matching name, `null` value is returned.
 
-Aspect: How to support two workflows in one app
-
-Alternative 1 (current choice): Store both books in the same model and toggle the active mode with a boolean flag.
-Pros: Simple control flow, easy to integrate with one shared UI shell, and low overhead when switching.
-Cons: Parsers and UI logic need to consistently respect the current mode.
-Alternative 2: Split the app into two separate windows or two separate applications.
-Pros: Stronger separation between workflows.
-Cons: Poorer user experience and more duplicated logic for shared functionality such as help, exit, and storage handling.
-### Delivery creation feature
-### Implementation
-
-The delivery creation feature is implemented by `deliverycommands.AddCommand`. The command requires a product, company, and deadline, with optional tags. According to the User Guide, the user enters the command in the form `add pr/PRODUCT c/COMPANY dl/DEADLINE [t/TAG]...`.
-
-Internally, `AddCommand` does not store only a raw company name. Instead, it stores a `CompanyNameContainsKeywordsPredicate` and uses it during execution to search the existing Company Book for a matching company. If no matching company is found, command execution fails with a "Company not found" error. This ensures that deliveries remain linked to valid company records already present in the system.
-
-The delivery address is no longer provided by the user. Instead, the command always uses the selected company’s stored address when constructing the delivery. This design reduces duplicated input and ensures consistency between company records and delivery addresses.
-
-After the company is resolved, the command constructs a `Delivery` object and checks `model.hasDelivery(toAdd)` before insertion. If the delivery is not a duplicate, it is inserted through `model.addDelivery(toAdd)`. The model then refreshes the filtered delivery list so the new item becomes visible in the UI.
-
-### Example
-
-Step 1. The user enters  
-`add pr/Industrial Printer c/Acme Supplies dl/2026-03-25 14:30 t/urgent`.
-
-Step 2. The delivery-side parser creates an `AddCommand`.
-
-Step 3. `AddCommand#execute(Model)` searches the Company Book for `Acme Supplies`.
-
-Step 4. If the company exists, the command retrieves the company’s stored address and uses it to construct the `Delivery` object.
+Step 4: If there is an existing company, `Delivery` will be created using the instance of `Company` found, otherwise a `CommandException` is thrown
 
 Step 5. The model checks for duplicates and adds the delivery to the Delivery Book.
 
 Step 6. The UI refreshes and shows the newly added delivery.
 
-### Design considerations
+The following diagram demonstrates how the `AddCommand` happens through the `Logic` component
+![DeliverySequenceDiagram-Logic](diagrams/DeliverySequenceDiagram-Logic.svg)
 
-**Aspect: How a delivery should reference a company**
+### Switch book feature
+#### Implementation
 
-**Alternative 1 (current choice):** Resolve the company during command execution and use the company’s stored address.
-* Pros: Keeps delivery creation consistent with existing company records, avoids orphan deliveries, and eliminates duplicated address input.
-* Cons: Command execution depends on the company already existing and on matching by name.
+MyCelia supports two operating modes: the Company Book and the Delivery Book.
+This feature is facilitated by a mode flag stored in the Model component through `Model#getCompanyPackage()` and `Model#setCompanyPackage(boolean)`. The flag determines which parser and book-specific command set should be active at a given time.
 
-**Alternative 2:** Allow free-form company names and manually specified addresses in deliveries.
-* Pros: More flexible and allows quick entry without pre-existing company records.
-* Cons: Inconsistent data, duplicate company names, and potential mismatch between company and delivery addresses.
+At the user level, the command used is switch. In the Company Book, `companycommands`. `SwitchCommand` sets the mode flag to false, which switches the application to the Delivery Book. The User Guide also states that this same command toggles between the two books, and that the UI tabs provide an equivalent interaction.
 
-### Delivery status feature (mark / unmark)
-### Implementation
+This design allows MyCelia to reuse a single command box and window while exposing two different workflows. Instead of launching separate applications or windows, the system keeps both books in memory and changes only the active context. This keeps interaction fast and matches the product’s keyboard-first design.
 
-MyCelia represents delivery completion using a tag-based approach rather than a separate boolean field. Specifically, MarkCommand adds the tag "delivered" to the selected delivery, while UnmarkCommand removes that tag. The User Guide is aligned with this implementation and explicitly states that delivered entries will display a delivered tag in the Delivery Book view.
+Example:
 
-Both commands operate on the filtered delivery list, not directly on the full underlying storage list. Each command first retrieves model.getFilteredDeliveryList(), validates that the provided index is within range, then reconstructs a new Delivery object using the old delivery’s product, company, deadline, and address, but with an updated tag set. The replacement is applied using model.setDelivery(oldDelivery, newDelivery).
+Step 1. The user is currently viewing the Company Book.
 
-This immutable-replacement style avoids mutating an existing Delivery object in place. It keeps command behavior more predictable and fits the same edit pattern used elsewhere in AB3-style projects, where updated domain objects are typically recreated and then replaced in the model.
+![SwitchStateDiagram1](diagrams/SwitchState1.svg)
 
-Example
+Step 2. The user enters `switch`.
 
-Step 1. The user enters mark 1.
+Step 3. `switch` is parsed by `AddressBookParser` and `SwitchCommand#execute(Model)` is called.
 
-Step 2. MarkCommand retrieves the first delivery from model.getFilteredDeliveryList().
+Step 4. The command updates the model mode flag by calling `Model#CompanyPackage(false)`.
 
-Step 3. The command copies its existing tags into a new set.
+The following diagram demonstrates how the switch command goes through the `Logic` component starting from CompanyBook:
 
-Step 4. The command adds the tag delivered.
+![SwitchSequenceDiagram](diagrams/SwitchSequenceDiagram-Logic.svg)
 
-Step 5. A new Delivery object is created and replaces the old one through model.setDelivery(...).
+Step 5. The logic manager switches to `deliveryBookParser` and UI updates to show the Delivery Book instead.
 
-Step 6. The UI refreshes and the delivery is shown with the delivered tag.
+![SwitchStateDiagram2](diagrams/SwitchState2.svg)
 
-The unmark command follows the same flow, except that it removes the delivered tag instead of adding it.
+#### Design considerations
 
-Design considerations
+Alternative 1 (current choice): Store both books in the same model and toggle the active mode with a boolean flag.
+- Pros: Simple control flow, easy to integrate with one shared UI shell, and low overhead when switching.
+- Cons: Parsers and UI logic need to consistently respect the current mode.
 
-Aspect: How to represent delivery completion
+Alternative 2: Split the app into two separate windows or two separate applications.
+- Pros: Stronger separation between workflows.
+- Cons: Poorer user experience and more duplicated logic for shared functionality such as help, exit, and storage handling.
 
-Alternative 1 (current choice): Use the existing tag system and reserve the tag delivered to indicate completion.
-Pros: Reuses existing infrastructure and keeps the data model simple.
-Cons: Completion is encoded implicitly through a special tag rather than a dedicated status field.
-Alternative 2: Add a dedicated boolean or enum status field to Delivery.
-Pros: Clearer semantics and easier extension to multiple statuses such as pending/in transit/delivered.
-Cons: Requires more model, parser, and storage changes.
-### Delivery sorting feature
-### Implementation
+### Delivery routing
+#### Implementation
 
-The sort feature is implemented by deliverycommands.SortCommand. In the user-facing command format, the user specifies a company using sort c/COMPANY. The command is described in the User Guide as sorting that company’s deliveries by deadline, with the earliest deadline shown first.
+MyCelia allows for user to query a Routing API to obtain an efficient travel plan for the chosen deliveries. This feature allows for users to view an optimized path they can take to finish their deliveries within their stipulated deadlines.
 
-During execution, SortCommand extracts the company name and builds a predicate that matches deliveries whose company name equals that input case-insensitively. It first checks whether the Delivery Book contains at least one matching delivery. If no matching delivery exists, the command fails with an error message. Otherwise, it calls model.sortDeliveriesByDeadline(matchesCompany) and then narrows the filtered list to the same predicate using model.updateFilteredDeliveryList(matchesCompany).
+This is done using the `SelectCommand` which takes in the indexes of the chosen deliveries as argument. After selection, the `RouteCommand` is used to check the selected deliveries for their deadlines and addresses, ensuring both fields are valid before being sent as a request to the API.
 
-The actual ordering logic is centralized in ModelManager using DELIVERY_DEADLINE_COMPARATOR. This comparator sorts first by deadline, then by company name, and finally by product name. Centralizing the comparator in the model keeps command logic concise and ensures that delivery ordering rules remain consistent.
+This design boosts the functionality of MyCelia while simultaneously handling any exceptions that may arise from invalid delivery deadlines or location.
 
-Example
+Example:
 
-Step 1. The user enters sort c/Acme Supplies.
+Step 1: The user inputs `select 1 2 4` to select deliveries 1, 2 and 4 for routing.
 
-Step 2. SortCommand constructs a predicate matching deliveries linked to Acme Supplies.
+Step 2: `Logic` executes the `SelectCommand` which shows the selected deliveries on the UI, allowing the user to check their selection.
 
-Step 3. The command checks whether any matching deliveries exist.
+The following diagram illustrates how the selected deliveries will be displayed on the UI
 
-Step 4. The model sorts matching deliveries using the deadline comparator.
+Step 3: The user confirms their selection and inputs `route`.
 
-Step 5. The filtered delivery list is updated to show only deliveries for Acme Supplies, now ordered by earliest deadline first.
+Step 4: `RouteCommand` produces a `CommandResult` calls that `planRoutes()` which checks for overdue deadlines. If all deliveries are valid, a request is built via `OptimizationService` and sent to the API.
 
-Design considerations
+Step 5: `OptimizationService` parses the response from the API and returns the `RouteResult`.
 
-Aspect: Where sorting logic should live
+The following diagram illustrates how the request is made and received:
 
-Alternative 1 (current choice): Keep sorting orchestration in the command, but store the comparator in the model.
-Pros: Separates “when to sort” from “how to sort”, improving maintainability.
-Cons: Sorting behavior is split across two classes.
-Alternative 2: Perform all sorting directly inside SortCommand.
-Pros: Fewer moving parts.
-Cons: Weaker separation of concerns and harder reuse if more commands later need the same ordering rule.
-### Delivery parser routing
-### Implementation
-
-MyCelia uses book-specific parsers so that commands can be interpreted according to the currently active workflow. On the delivery side, DeliveryBookParser maps the command word to delivery-specific commands such as AddCommand, EditCommand, DeleteCommand, FindCommand, MarkCommand, UnmarkCommand, SortCommand, and delivery-side SwitchCommand. It also handles shared commands such as help and exit.
-
-This design is a natural fit for a dual-book application. Even though both books share several command words such as add, edit, delete, find, and clear, the meaning of those commands differs depending on whether the user is managing companies or deliveries. Parser separation avoids overloading one parser with too many mode-dependent branches.
-
-Design considerations
-
-Aspect: How to parse commands in a dual-book app
-
-Alternative 1 (current choice): Use separate parsers for different books.
-Pros: Cleaner command routing and easier extension of each workflow independently.
-Cons: Some duplicated command-word handling structure across parsers.
-Alternative 2: Use one global parser containing all command variants.
-Pros: Single parsing entry point.
-Cons: Harder to maintain because many command words are reused across books.
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
+Step 6: `RouteResult` is shown on the UI
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -360,26 +284,24 @@ _{Explain here how the data archiving feature will be implemented}_
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a…           | I want to…                                          | So that I can…                           |
-| -------- |-----------------|-----------------------------------------------------|------------------------------------------|
-| `* * *`  | user            | add addresses                                       | store new delivery locations             |
-| `* * *`  | user            | remove addresses                                    | keep the address book clean              |
-| `* * *`  | user            | edit addresses                                      | correct outdated location details        |
-| `* * *`  | user            | create a delivery list                              | keep track of deliveries                 |
-| `* * *`  | user            | view delivery lists and addresses                   | know what to do next                     |
-| `* * *`  | user            | mark a delivery as complete                         | track what is left                       |
-| `* * *`  | user            | mark a delivery as incomplete                       | undo mistakes                            |
-| `* * *`  | user            | add a client contact with key fields                | retrieve client details quickly          |
-| `* * *`  | user            | create a delivery record linked to a client contact | track work by customer                   |
-| `* * *`  | forgetful user  | track all deliveries for the day                    | complete them on time                    |
-| `* *`    | Efficient user      | Plan the route beforehand                                | reach all locations quickly and easily   |
-| `* *`    | user            | view deliveries due at each location                | track progress per stop                  |
-| `* *`    | user            | tag contacts (e.g., VIP/fragile/COD/restricted)     | filter for special handling              |
+| Priority | As a…           | I want to…                                          | So that I can…                          |
+| -------- |-----------------|-----------------------------------------------------|-----------------------------------------|
+| `* * *`  | user            | add addresses                                       | store new delivery locations            |
+| `* * *`  | user            | remove addresses                                    | keep the address book clean             |
+| `* * *`  | user            | edit addresses                                      | correct outdated location details       |
+| `* * *`  | user            | create a delivery list                              | keep track of deliveries                |
+| `* * *`  | user            | view delivery lists and addresses                   | know what to do next                    |
+| `* * *`  | user            | mark a delivery as complete                         | track what is left                      |
+| `* * *`  | user            | mark a delivery as incomplete                       | undo mistakes                           |
+| `* * *`  | user            | add a client contact with key fields                | retrieve client details quickly         |
+| `* * *`  | user            | create a delivery record linked to a client contact | track work by customer                  |
+| `* * *`  | forgetful user  | track all deliveries for the day                    | complete them on time                   |
+| `* *`    | Efficient user      | Plan the route beforehand                           | reach all locations quickly and easily  |
+| `* *`    | user            | tag contacts (e.g., VIP/fragile/COD/restricted)     | filter for special handling             |
 | `* *`    | user            | add cut-off timings to deliveries                   | know which deliveries must be done first |
-| `* *`    | user            | sort deliveries by tags/time/distance               | prioritize efficiently                   |
-| `*`      | first-time user | view a guided tour                                  | learn the app quickly                    |
-| `*`      | Lazy user       | add addresses using postal code/coordinates         | reduce manual typing                     |
-| `*`      | Driving user    | View map through the app                            | use the GPS to navigate quickly          |
+| `* *`    | user            | sort deliveries by tags/time                        | prioritize efficiently                  |
+| `*`      | first-time user | view a guided tour                                  | learn the app quickly                   |
+| `*`      | Driving user    | View map through the app                            | to navigate quickly          |
 
 ## Use cases
 
@@ -488,6 +410,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 - **Tag:** A label applied to contacts/addresses/deliveries for filtering and prioritization.
 - **Special-handling tags:** Tags such as VIP/fragile/COD/restricted indicating extra constraints.
 - **COD (Cash on Delivery):** A delivery that requires payment collection upon delivery.
+-  **API:** Application Programming Interface is a set of functions and procedures that allows communication between different software applications.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -517,17 +440,17 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
-### Deleting a person
+### Deleting a Company
 
-1. Deleting a person while all persons are being shown
+1. Deleting a company while all companies are being shown
 
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+   1. Prerequisites: List all companies using the `list` command. Multiple companies in the list.
 
    1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+      Expected: First company is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 
    1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+      Expected: No company is deleted. Error details shown in the status message. Status bar remains the same.
 
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
@@ -538,6 +461,8 @@ testers are expected to do more *exploratory* testing.
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. When data file is corrupted, it will attempt to salvage as much as possible
+   2. If `Company 1` has a missing/corrupted field, the error is logged and the remaining companies left in the data file will be loaded
+   3. Users can attempt to manually set the data file by editing the json files
 
 1. _{ more test cases …​ }_

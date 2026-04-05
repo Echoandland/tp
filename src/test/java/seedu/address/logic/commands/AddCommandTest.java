@@ -10,13 +10,16 @@ import static seedu.address.testutil.TypicalCompanies.ALICE;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.companycommands.AddCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -221,6 +224,31 @@ public class AddCommandTest {
 
         @Override
         public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableSet<Delivery> getDeliverySelection() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void clearDeliverySelection() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void toggleDeliverySelection(Index index) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setDeliverySelected(Delivery delivery, boolean selected) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public List<Delivery> getSelectedDeliveriesInDisplayOrder() {
             throw new AssertionError("This method should not be called.");
         }
 

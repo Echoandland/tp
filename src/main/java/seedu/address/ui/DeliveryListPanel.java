@@ -1,17 +1,14 @@
 package seedu.address.ui;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
+import seedu.address.model.Model;
 import seedu.address.model.delivery.Delivery;
 
 /**
@@ -20,7 +17,7 @@ import seedu.address.model.delivery.Delivery;
 public class DeliveryListPanel extends UiPart<Region> {
     private static final String FXML = "DeliveryListPanel.fxml";
 
-    private final ObservableSet<Delivery> selectedDeliveries = FXCollections.observableSet(new LinkedHashSet<>());
+    private final Model model;
     private final Runnable onSelectionChanged;
 
     @FXML
@@ -29,40 +26,28 @@ public class DeliveryListPanel extends UiPart<Region> {
     /**
      * Creates a {@code DeliveryListPanel} with the given {@code ObservableList}.
      */
-    public DeliveryListPanel(ObservableList<Delivery> deliveryList, Runnable onSelectionChanged) {
+    public DeliveryListPanel(ObservableList<Delivery> deliveryList, Model model, Runnable onSelectionChanged) {
         super(FXML);
+        this.model = model;
         this.onSelectionChanged = onSelectionChanged;
         deliveryListView.setItems(deliveryList);
         deliveryListView.setCellFactory(listView -> new DeliveryListViewCell());
-        deliveryList.addListener((ListChangeListener<Delivery>) change -> pruneSelection(deliveryList));
+        model.getDeliverySelection().addListener((SetChangeListener<Delivery>) c -> {
+            deliveryListView.refresh();
+            onSelectionChanged.run();
+        });
     }
 
     /**
-     * Returns the currently selected deliveries in display order.
+     * Returns selected deliveries in display order
+     * (same as {@link Model#getSelectedDeliveriesInDisplayOrder()}).
      */
     public List<Delivery> getSelectedDeliveries() {
-        List<Delivery> selected = new ArrayList<>();
-        for (Delivery delivery : deliveryListView.getItems()) {
-            if (selectedDeliveries.contains(delivery)) {
-                selected.add(delivery);
-            }
-        }
-        return selected;
+        return model.getSelectedDeliveriesInDisplayOrder();
     }
 
     private void setSelected(Delivery delivery, boolean isSelected) {
-        if (isSelected) {
-            selectedDeliveries.add(delivery);
-        } else {
-            selectedDeliveries.remove(delivery);
-        }
-        onSelectionChanged.run();
-    }
-
-    private void pruneSelection(ObservableList<Delivery> deliveryList) {
-        if (selectedDeliveries.retainAll(new ArrayList<>(deliveryList))) {
-            onSelectionChanged.run();
-        }
+        model.setDeliverySelected(delivery, isSelected);
     }
 
     /**
@@ -78,7 +63,7 @@ public class DeliveryListPanel extends UiPart<Region> {
                 setText(null);
             } else {
                 setGraphic(new DeliveryCard(delivery, getIndex() + 1,
-                        selectedDeliveries.contains(delivery),
+                        model.getDeliverySelection().contains(delivery),
                         isSelected -> setSelected(delivery, isSelected)).getRoot());
             }
         }

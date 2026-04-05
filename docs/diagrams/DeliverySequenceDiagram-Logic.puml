@@ -1,0 +1,50 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":DeliveryBookParser" as DeliveryBookParser LOGIC_COLOR
+participant "a:AddCommand" as AddCommand LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+[-> LogicManager : execute(add)
+activate LogicManager
+
+LogicManager -> DeliveryBookParser : parseCommand(add)
+activate DeliveryBookParser
+
+create AddCommand
+DeliveryBookParser -> AddCommand
+activate AddCommand
+
+AddCommand --> DeliveryBookParser
+deactivate AddCommand
+
+DeliveryBookParser --> LogicManager : a
+deactivate DeliveryBookParser
+
+LogicManager -> AddCommand : execute()
+activate AddCommand
+
+AddCommand -> AddCommand : findMatchingCompany()
+activate AddCommand
+
+AddCommand -> Model : findCompany()
+activate Model
+
+Model --> AddCommand
+deactivate Model
+deactivate AddCommand
+
+AddCommand --> LogicManager : result
+deactivate AddCommand
+AddCommand -[hidden]-> LogicManager : result
+destroy AddCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

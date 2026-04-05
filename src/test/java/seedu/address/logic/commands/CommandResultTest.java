@@ -5,7 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
+
+import seedu.address.model.company.Address;
+import seedu.address.model.company.Company;
+import seedu.address.model.company.Email;
+import seedu.address.model.company.Name;
+import seedu.address.model.company.Phone;
+import seedu.address.model.delivery.Deadline;
+import seedu.address.model.delivery.Delivery;
+import seedu.address.model.delivery.Product;
 
 public class CommandResultTest {
     @Test
@@ -33,6 +46,12 @@ public class CommandResultTest {
 
         // different exit value -> returns false
         assertFalse(commandResult.equals(new CommandResult("feedback", false, true)));
+
+        Company company = new Company(new Name("C"), new Phone("91234567"), new Email("c@e.com"),
+                new Address("addr"), Set.of());
+        Delivery delivery = new Delivery(new Product("x"), company, new Deadline("2026-01-01 10:00"),
+                Collections.emptySet());
+        assertFalse(commandResult.equals(new CommandResult("feedback", false, false, List.of(delivery))));
     }
 
     @Test
@@ -50,6 +69,13 @@ public class CommandResultTest {
 
         // different exit value -> returns different hashcode
         assertNotEquals(commandResult.hashCode(), new CommandResult("feedback", false, true).hashCode());
+
+        Company company = new Company(new Name("C"), new Phone("91234567"), new Email("c@e.com"),
+                new Address("addr"), Set.of());
+        Delivery delivery = new Delivery(new Product("x"), company, new Deadline("2026-01-01 10:00"),
+                Collections.emptySet());
+        assertNotEquals(commandResult.hashCode(),
+                new CommandResult("feedback", false, false, List.of(delivery)).hashCode());
     }
 
     @Test
@@ -57,7 +83,8 @@ public class CommandResultTest {
         CommandResult commandResult = new CommandResult("feedback");
         String expected = CommandResult.class.getCanonicalName() + "{feedbackToUser="
                 + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
-                + ", exit=" + commandResult.isExit() + "}";
+                + ", exit=" + commandResult.isExit() + ", deliveriesToRoute="
+                + commandResult.getDeliveriesToRoute() + "}";
         assertEquals(expected, commandResult.toString());
     }
 }

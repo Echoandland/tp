@@ -4,16 +4,23 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.core.index.Index;
 import seedu.address.model.company.Company;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.user.User;
@@ -36,6 +43,7 @@ public class ModelManager implements Model {
     private User user;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
+    private final ObservableSet<Delivery> deliverySelection = FXCollections.observableSet(new LinkedHashSet<>());
     private boolean isCompanyPackage;
     private final StringProperty userAddress = new SimpleStringProperty();
 
@@ -55,6 +63,7 @@ public class ModelManager implements Model {
         this.user = user;
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
+        this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelectionToFilteredList());
         userAddress.set("Start address: " + user.getDepotAddress());
     }
 
@@ -225,6 +234,55 @@ public class ModelManager implements Model {
         filteredDeliveries.setPredicate(predicate);
     }
 
+    @Override
+    public ObservableSet<Delivery> getDeliverySelection() {
+        return deliverySelection;
+    }
+
+    @Override
+    public void clearDeliverySelection() {
+        deliverySelection.clear();
+    }
+
+    @Override
+    public void toggleDeliverySelection(Index index) {
+        requireNonNull(index);
+        Delivery delivery = filteredDeliveries.get(index.getZeroBased());
+        if (deliverySelection.contains(delivery)) {
+            deliverySelection.remove(delivery);
+        } else {
+            deliverySelection.add(delivery);
+        }
+    }
+
+    @Override
+    public void setDeliverySelected(Delivery delivery, boolean selected) {
+        requireNonNull(delivery);
+        if (!filteredDeliveries.contains(delivery)) {
+            return;
+        }
+        if (selected) {
+            deliverySelection.add(delivery);
+        } else {
+            deliverySelection.remove(delivery);
+        }
+    }
+
+    @Override
+    public List<Delivery> getSelectedDeliveriesInDisplayOrder() {
+        List<Delivery> ordered = new ArrayList<>();
+        for (Delivery delivery : filteredDeliveries) {
+            if (deliverySelection.contains(delivery)) {
+                ordered.add(delivery);
+            }
+        }
+        return ordered;
+    }
+
+    private void pruneDeliverySelectionToFilteredList() {
+        deliverySelection.retainAll(new ArrayList<>(filteredDeliveries));
+    }
+
     // =========== User ================================================================
 
     @Override
@@ -259,6 +317,7 @@ public class ModelManager implements Model {
                 && userPrefs.equals(otherModelManager.userPrefs)
                 && user.equals(otherModelManager.user)
                 && filteredCompanies.equals(otherModelManager.filteredCompanies)
-                && filteredDeliveries.equals(otherModelManager.filteredDeliveries);
+                && filteredDeliveries.equals(otherModelManager.filteredDeliveries)
+                && deliverySelection.equals(otherModelManager.deliverySelection);
     }
 }
