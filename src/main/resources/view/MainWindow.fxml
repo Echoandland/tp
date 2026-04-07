@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-         title="MyCelia" minWidth="600" minHeight="650" onCloseRequest="#handleExit">
+         title="MyCelia" minWidth="620" minHeight="650" onCloseRequest="#handleExit">
   <icons>
     <Image url="@/images/address_book_32.png" />
   </icons>
@@ -29,9 +29,9 @@
         <URL value="@Extensions.css" />
       </stylesheets>
 
-      <VBox style="-fx-background-color: #0d1117;">
+      <VBox styleClass="app-shell">
 
-        <!-- Hidden MenuBar for keyboard accelerators (F1 help) -->
+        <!-- Hidden MenuBar — keeps F1 accelerator wiring intact -->
         <MenuBar fx:id="menuBar" visible="false" managed="false">
           <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
@@ -41,11 +41,10 @@
           </Menu>
         </MenuBar>
 
-        <!-- Top Bar: App Title + Pill Toggle + User Address -->
+        <!-- ── Top Bar ── -->
         <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="16">
           <Label text="MyCelia" styleClass="app-title" />
 
-          <!-- Pill Toggle -->
           <HBox fx:id="pillToggle" styleClass="pill-toggle" alignment="CENTER_LEFT">
             <Button fx:id="pillCompanies" text="Companies" styleClass="pill-button-active"
                     onAction="#handlePillCompanies" />
@@ -55,52 +54,42 @@
                     onAction="#handlePillRoutes" />
           </HBox>
 
-          <!-- Spacer -->
           <Region HBox.hgrow="ALWAYS" />
 
-          <!-- User Address (compact, right-aligned) -->
           <Label fx:id="userAddressLabel" styleClass="user-address-label" />
         </HBox>
 
-        <!-- Command Box -->
-        <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" style="-fx-background-color: #0d1117;">
-          <padding>
-            <Insets top="8" right="16" bottom="4" left="16" />
-          </padding>
-        </StackPane>
+        <!-- ── Console Area: Command Input + Result Display ── -->
+        <VBox styleClass="console-area">
+          <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" styleClass="command-box-pane" />
+          <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="result-display-pane" />
+        </VBox>
 
-        <!-- Result Display (compact feedback bar) -->
-        <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="feedback-bar"
-                   minHeight="32" prefHeight="32" maxHeight="48">
-          <padding>
-            <Insets top="2" right="16" bottom="2" left="16" />
-          </padding>
-        </StackPane>
-
-        <!-- Tab Pane (headers hidden, controlled by pill toggle) -->
+        <!-- ── Tab Content Area ── -->
         <TabPane fx:id="listTabPane" VBox.vgrow="ALWAYS">
           <tabs>
+
             <Tab closable="false" text="Companies">
-              <VBox style="-fx-background-color: #0d1117;" minWidth="340" prefWidth="340">
+              <VBox styleClass="content-pane" minWidth="340" prefWidth="340">
                 <padding>
-                  <Insets top="10" right="12" bottom="10" left="12" />
+                  <Insets top="12" right="12" bottom="12" left="12" />
                 </padding>
                 <StackPane fx:id="companyListPanelPlaceholder" VBox.vgrow="ALWAYS" />
               </VBox>
             </Tab>
 
             <Tab closable="false" text="Deliveries">
-              <VBox style="-fx-background-color: #0d1117;" minWidth="340" prefWidth="340">
+              <VBox styleClass="content-pane" minWidth="340" prefWidth="340">
                 <padding>
-                  <Insets top="10" right="12" bottom="10" left="12" />
+                  <Insets top="12" right="12" bottom="12" left="12" />
                 </padding>
                 <Button fx:id="mapSelectedDeliveriesButton"
                         text="Plan Today's Route"
                         onAction="#handleShowSelectedRoutes"
                         disable="true"
-                        styleClass="button">
+                        styleClass="action-button">
                   <VBox.margin>
-                    <Insets bottom="8" />
+                    <Insets bottom="10" />
                   </VBox.margin>
                 </Button>
                 <StackPane fx:id="deliveryListPanelPlaceholder" VBox.vgrow="ALWAYS" />
@@ -108,15 +97,18 @@
             </Tab>
 
             <Tab closable="false" text="Routes">
-              <StackPane fx:id="routePanelPlaceholder" style="-fx-background-color: #0d1117;" />
+              <StackPane fx:id="routePanelPlaceholder" styleClass="content-pane" />
             </Tab>
+
           </tabs>
           <VBox.vgrow>
             <Priority fx:constant="ALWAYS" />
           </VBox.vgrow>
         </TabPane>
 
+        <!-- ── Status Bar ── -->
         <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />
+
       </VBox>
     </Scene>
   </scene>

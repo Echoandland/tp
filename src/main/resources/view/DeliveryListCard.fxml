@@ -8,32 +8,31 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      alignment="CENTER_LEFT" spacing="8">
+<HBox id="cardPane" fx:id="cardPane"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER_LEFT" spacing="10">
   <padding>
-    <Insets top="8" right="12" bottom="8" left="12" />
+    <Insets top="10" right="14" bottom="10" left="14" />
   </padding>
 
   <CheckBox fx:id="selectDeliveryCheckBox" />
 
-  <VBox HBox.hgrow="ALWAYS" spacing="3">
-    <!-- Row 1: ID + Product + Deadline + Tags -->
-    <HBox spacing="8" alignment="CENTER_LEFT">
-      <Label fx:id="id" styleClass="cell_big_label">
-        <minWidth>
-          <Region fx:constant="USE_PREF_SIZE" />
-        </minWidth>
-      </Label>
-      <Label fx:id="product" text="$product" styleClass="cell_big_label" />
+  <VBox HBox.hgrow="ALWAYS" spacing="4">
+
+    <!-- Row 1: index · product (primary) + deadline badge + tags -->
+    <HBox spacing="6" alignment="CENTER_LEFT">
+      <Label fx:id="id" styleClass="card-index" />
+      <Label fx:id="product" text="$product" styleClass="card-name" />
       <Region HBox.hgrow="ALWAYS" />
-      <Label fx:id="deadline" styleClass="cell_small_label" text="$deadline" />
-      <FlowPane fx:id="tags" alignment="CENTER_RIGHT" />
+      <Label fx:id="deadline" styleClass="deadline-badge" text="$deadline" />
+      <FlowPane fx:id="tags" alignment="CENTER_RIGHT" hgap="4" vgap="3" />
     </HBox>
 
-    <!-- Row 2: Company + Address (compact single line) -->
-    <HBox spacing="12" alignment="CENTER_LEFT">
-      <Label fx:id="company" styleClass="cell_small_label" text="$company" />
-      <Label fx:id="address" styleClass="cell_small_label" text="$address" />
+    <!-- Row 2: company · address -->
+    <HBox spacing="14" alignment="CENTER_LEFT">
+      <Label fx:id="company" styleClass="card-meta" text="$company" />
+      <Label fx:id="address" styleClass="card-meta" text="$address" />
     </HBox>
+
   </VBox>
 </HBox>
