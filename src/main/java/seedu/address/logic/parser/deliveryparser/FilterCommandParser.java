@@ -5,7 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
 import java.util.List;
 
-import seedu.address.logic.commands.deliverycommands.SortCommand;
+import seedu.address.logic.commands.deliverycommands.FilterCommand;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.Parser;
@@ -14,24 +14,22 @@ import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 
-import java.util.List;
-
 /**
- * Parses input arguments and creates a new SortCommand object.
+ * Parses input arguments and creates a new FilterCommand object.
  */
-public class SortCommandParser implements Parser<SortCommand> {
+public class FilterCommandParser implements Parser<FilterCommand> {
 
     /**
-     * Parses the given {@code String} of arguments in the context of the SortCommand
-     * and returns a SortCommand object for execution.
+     * Parses the given {@code String} of arguments in the context of the FilterCommand
+     * and returns a FilterCommand object for execution.
      *
      * @throws ParseException if the user input does not conform the expected format
      */
-    public SortCommand parse(String args) throws ParseException {
+    public FilterCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_COMPANY);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_COMPANY) || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
 
         List<CompanyNameContainsKeywordsPredicate> companies = argMultimap.getAllValues(PREFIX_COMPANY).stream()
@@ -45,9 +43,9 @@ public class SortCommandParser implements Parser<SortCommand> {
                 .toList();
 
         if (companies.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
         }
-        return new SortCommand(companies);
+        return new FilterCommand(companies);
     }
 
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {

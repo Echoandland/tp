@@ -9,31 +9,31 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.deliverycommands.SortCommand;
-import seedu.address.logic.parser.deliveryparser.SortCommandParser;
+import seedu.address.logic.commands.deliverycommands.FilterCommand;
+import seedu.address.logic.parser.deliveryparser.FilterCommandParser;
 import seedu.address.model.company.Company;
 import seedu.address.model.company.CompanyNameContainsKeywordsPredicate;
 import seedu.address.model.company.Email;
 import seedu.address.model.company.Name;
 import seedu.address.model.company.Phone;
 
-public class SortCommandParserTest {
+public class FilterCommandParserTest {
     private static final Company DELL = new Company(new Name("Dell"), new Phone("99272758"),
             new Email("dell@example.com"),
             new seedu.address.model.company.Address("Changi Business Park Central 1"),
             getTagSet("test"));
-    private final SortCommandParser parser = new SortCommandParser();
+    private final FilterCommandParser parser = new FilterCommandParser();
 
     @Test
     public void parse_validArgs_returnsSortCommand() {
         assertParseSuccess(parser, " c/Dell",
-                new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell")))));
+                new FilterCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell")))));
     }
 
     @Test
     public void parse_missingCompany_throwsParseException() {
         assertParseFailure(parser, "",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, SortCommand.MESSAGE_USAGE));
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FilterCommand.MESSAGE_USAGE));
     }
 
 }

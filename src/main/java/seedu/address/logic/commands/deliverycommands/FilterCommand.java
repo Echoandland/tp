@@ -4,7 +4,6 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_COMPANY;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -19,24 +18,24 @@ import seedu.address.model.delivery.Delivery;
 /**
  * Sorts a company's deliveries by deadline, with the earliest deadline shown first.
  */
-public class SortCommand extends Command {
+public class FilterCommand extends Command {
 
-    public static final String COMMAND_WORD = "sort";
+    public static final String COMMAND_WORD = "filter";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Sorts deliveries for a company by deadline, "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Filters deliveries for a company by deadline, "
             + "with the earliest deadline first.\n"
             + "Parameters: " + PREFIX_COMPANY + "COMPANY\n"
             + "Example: " + COMMAND_WORD + " " + PREFIX_COMPANY + "Dell";
 
-    public static final String MESSAGE_SORT_SUCCESS = "Sorted %1$d delivery(s) for company: %2$s";
+    public static final String MESSAGE_SORT_SUCCESS = "Filtered %1$d delivery(s) for company: %2$s";
     public static final String MESSAGE_NO_DELIVERIES_FOR_COMPANY = "No deliveries found for company: %1$s";
 
     private final List<CompanyNameContainsKeywordsPredicate> name;
 
     /**
-     * Creates a SortCommand to sort deliveries for the specified company.
+     * Creates a FilterCommand to filter deliveries for the specified company.
      */
-    public SortCommand(List<CompanyNameContainsKeywordsPredicate> name) {
+    public FilterCommand(List<CompanyNameContainsKeywordsPredicate> name) {
         requireNonNull(name);
         this.name = name;
     }
@@ -74,12 +73,12 @@ public class SortCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof SortCommand)) {
+        if (!(other instanceof FilterCommand)) {
             return false;
         }
 
-        SortCommand otherSortCommand = (SortCommand) other;
-        return name.equals(otherSortCommand.name);
+        FilterCommand otherFilterCommand = (FilterCommand) other;
+        return name.equals(otherFilterCommand.name);
     }
 
     @Override

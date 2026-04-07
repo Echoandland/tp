@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.commands.deliverycommands.SortCommand;
+import seedu.address.logic.commands.deliverycommands.FilterCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.DeliveryBook;
 import seedu.address.model.Model;
@@ -24,7 +24,7 @@ import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 
-public class SortCommandTest {
+public class FilterCommandTest {
     private static final Company DELL = new Company(new Name("Dell"), new Phone("99272758"),
             new Email("dell@example.com"),
             new seedu.address.model.company.Address("Changi Business Park Central 1"),
@@ -48,10 +48,10 @@ public class SortCommandTest {
         model.addDelivery(earlierDell);
         model.addDelivery(acerDelivery);
 
-        SortCommand command = new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
+        FilterCommand command = new FilterCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
         CommandResult result = command.execute(model);
 
-        assertEquals(String.format(SortCommand.MESSAGE_SORT_SUCCESS, 2, "Dell"),
+        assertEquals(String.format(FilterCommand.MESSAGE_SORT_SUCCESS, 2, "Dell"),
                 result.getFeedbackToUser());
         assertEquals(2, model.getFilteredDeliveryList().size());
         assertEquals(earlierDell, model.getFilteredDeliveryList().get(0));
@@ -62,8 +62,8 @@ public class SortCommandTest {
     @Test
     public void execute_missingCompanyDelivery_throwsCommandException() {
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
-        SortCommand command = new SortCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
-        String expectedMessage = String.format(SortCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY, "Dell");
+        FilterCommand command = new FilterCommand(List.of(new CompanyNameContainsKeywordsPredicate(List.of("Dell"))));
+        String expectedMessage = String.format(FilterCommand.MESSAGE_NO_DELIVERIES_FOR_COMPANY, "Dell");
 
         assertThrows(CommandException.class, expectedMessage, () -> command.execute(model));
     }
