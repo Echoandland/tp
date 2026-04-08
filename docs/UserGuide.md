@@ -4,7 +4,7 @@
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
-![MyCelia Main Window](images/ui-overview.png)
+<img src="images/ui-overview.png" width="700" alt="MyCelia Main Window" />
 
 ---
 
@@ -37,7 +37,7 @@ MyCelia can be used entirely by keyboard, but several actions are also accessibl
 
 ### Navigation Bar
 
-![Navigation Bar](images/navigation-bar.png)
+<img src="images/navigation-bar.png" width="500" alt="Navigation Bar" />
 
 At the top of the window is a pill toggle bar with navigation buttons:
 
@@ -50,7 +50,7 @@ At the top of the window is a pill toggle bar with navigation buttons:
 
 ### Command Terminal
 
-![Command Terminal](images/command-terminal.png)
+<img src="images/command-terminal.png" width="600" alt="Command Terminal" />
 
 |Box|What it does|
 |-|-|
@@ -63,25 +63,25 @@ Every UI action has an equivalent command. Use whichever feels faster for your w
 
 ### Help Window
 
-![Help Window](images/help-window.png)
+<img src="images/help-window.png" width="500" alt="Help Window" />
 
 The help window provides a link to this user guide.
 
 ### Company Book View
 
-![Company Book](images/company-book.png)
+<img src="images/company-book.png" width="600" alt="Company Book" />
 
 The Company Book view shows all your business contacts. Each entry displays the company name, phone number, email, address, and any tags assigned to it. Below is the location the data is saved.
 
 ### Delivery Book View
 
-![Delivery Book](images/delivery-book.png)
+<img src="images/delivery-book.png" width="600" alt="Delivery Book" />
 
 The Delivery Book view shows all logged deliveries. Deliveries marked as delivered will display a `delivered` tag. You can check individual deliveries using their checkboxes to select them for route planning. A **Plan Today's Route** button at the top of the list becomes active when at least one delivery is selected — clicking it opens the Routes tab and plans the route. Below is the location the data is saved.
 
 ### Routes View
 
-![Routes View](images/routes-view.png)
+<img src="images/routes-view.png" width="700" alt="Routes View" />
 
 The Routes view displays an interactive map with the optimised route for selected deliveries. Switch to it using the **Routes** pill button, or trigger it automatically via the `route` command or the **Plan Today's Route** button.
 
