@@ -8,9 +8,28 @@
 }
 
 #helpMessage {
-    -fx-text-fill: #1E3A8A;
+    -fx-text-fill: #4E6E9B;
+    -fx-font-family: "Segoe UI", "SF Pro Text", "Inter", sans-serif;
+    -fx-font-size: 10pt;
+}
+
+#userGuideLink {
+    -fx-text-fill: #2563EB;
     -fx-font-family: "Segoe UI", "SF Pro Text", "Inter", sans-serif;
     -fx-font-size: 11pt;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#userGuideLink:hover {
+    -fx-text-fill: #1D4ED8;
+}
+
+#userGuideLink:visited {
+    -fx-text-fill: #1E40AF;
 }
 
 #copyButton {
