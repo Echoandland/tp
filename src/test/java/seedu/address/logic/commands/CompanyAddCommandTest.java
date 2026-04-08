@@ -34,30 +34,30 @@ import seedu.address.model.delivery.Delivery;
 import seedu.address.model.user.User;
 import seedu.address.testutil.CompanyBuilder;
 
-public class AddCommandTest {
+public class CompanyAddCommandTest {
 
     @Test
-    public void constructor_nullPerson_throwsNullPointerException() {
+    public void constructor_nullCompany_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddCommand(null));
     }
 
     @Test
-    public void execute_personAcceptedByModel_addSuccessful() throws Exception {
-        ModelStubAcceptingPersonAdded modelStub = new ModelStubAcceptingPersonAdded();
-        Company validPerson = new CompanyBuilder().build();
+    public void execute_companyAcceptedByModel_addSuccessful() throws Exception {
+        ModelStubAcceptingCompanyAdded modelStub = new ModelStubAcceptingCompanyAdded();
+        Company validCompany = new CompanyBuilder().build();
 
-        CommandResult commandResult = new AddCommand(validPerson).execute(modelStub);
+        CommandResult commandResult = new AddCommand(validCompany).execute(modelStub);
 
-        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validPerson)),
+        assertEquals(String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(validCompany)),
                 commandResult.getFeedbackToUser());
-        assertEquals(Arrays.asList(validPerson), modelStub.personsAdded);
+        assertEquals(Arrays.asList(validCompany), modelStub.companiesAdded);
     }
 
     @Test
-    public void execute_duplicatePerson_throwsCommandException() {
-        Company validPerson = new CompanyBuilder().build();
-        AddCommand addCommand = new AddCommand(validPerson);
-        ModelStub modelStub = new ModelStubWithPerson(validPerson);
+    public void execute_duplicateCompany_throwsCommandException() {
+        Company validCompany = new CompanyBuilder().build();
+        AddCommand addCommand = new AddCommand(validCompany);
+        ModelStub modelStub = new ModelStubWithCompany(validCompany);
 
         assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_COMPANY, () -> addCommand.execute(modelStub));
     }
@@ -82,7 +82,7 @@ public class AddCommandTest {
         // null -> returns false
         assertFalse(addAliceCommand.equals(null));
 
-        // different person -> returns false
+        // different company -> returns false
         assertFalse(addAliceCommand.equals(addBobCommand));
     }
 
@@ -94,214 +94,152 @@ public class AddCommandTest {
     }
 
     /**
-     * A default model stub that have all of the methods failing.
+     * A default model stub that has all methods failing.
      */
     private class ModelStub implements Model {
-        @Override
-        public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
+        @Override public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ReadOnlyUserPrefs getUserPrefs() {
+        @Override public ReadOnlyUserPrefs getUserPrefs() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public GuiSettings getGuiSettings() {
+        @Override public GuiSettings getGuiSettings() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setGuiSettings(GuiSettings guiSettings) {
+        @Override public void setGuiSettings(GuiSettings guiSettings) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public boolean getCompanyPackage() {
+        @Override public boolean getCompanyPackage() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setCompanyPackage(boolean isCompanyPackage) {
+        @Override public void setCompanyPackage(boolean isCompanyPackage) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public Path getAddressBookFilePath() {
+        @Override public Path getAddressBookFilePath() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setAddressBookFilePath(Path addressBookFilePath) {
+        @Override public void setAddressBookFilePath(Path addressBookFilePath) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setDeliveryBookFilePath(Path deliveryBookFilePath) {
+        @Override public void setDeliveryBookFilePath(Path deliveryBookFilePath) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void addCompany(Company person) {
+        @Override public void addCompany(Company company) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setAddressBook(ReadOnlyAddressBook newData) {
+        @Override public void setAddressBook(ReadOnlyAddressBook newData) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ReadOnlyAddressBook getAddressBook() {
+        @Override public ReadOnlyAddressBook getAddressBook() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook) {
+        @Override public void setDeliveryBook(ReadOnlyDeliveryBook deliveryBook) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ReadOnlyDeliveryBook getDeliveryBook() {
+        @Override public ReadOnlyDeliveryBook getDeliveryBook() {
             return new DeliveryBook();
         }
-
-        @Override
-        public boolean hasCompany(Company person) {
+        @Override public boolean hasCompany(Company company) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void deleteCompany(Company target) {
+        @Override public void deleteCompany(Company target) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setCompany(Company target, Company editedPerson) {
+        @Override public void setCompany(Company target, Company editedCompany) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ObservableList<Company> getFilteredCompanyList() {
+        @Override public ObservableList<Company> getFilteredCompanyList() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void updateFilteredCompanyList(Predicate<Company> predicate) {
+        @Override public void updateFilteredCompanyList(Predicate<Company> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setDelivery(Delivery target, Delivery editedDelivery) {
+        @Override public void setDelivery(Delivery target, Delivery editedDelivery) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void sortDeliveriesByDeadline(Predicate<Delivery> predicate) {
+        @Override public void sortDeliveriesByDefault(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public boolean hasDelivery(Delivery delivery) {
+        @Override public void sortDeliveriesByProduct(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void addDelivery(Delivery delivery) {
+        @Override public void sortDeliveriesByCompany(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void deleteDelivery(Delivery delivery) {
+        @Override public void sortDeliveriesByDeadline(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ObservableList<Delivery> getFilteredDeliveryList() {
+        @Override public boolean hasDelivery(Delivery delivery) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
+        @Override public void addDelivery(Delivery delivery) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public ObservableSet<Delivery> getDeliverySelection() {
+        @Override public void deleteDelivery(Delivery delivery) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void clearDeliverySelection() {
+        @Override public ObservableList<Delivery> getFilteredDeliveryList() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void toggleDeliverySelection(Index index) {
+        @Override public void updateFilteredDeliveryList(Predicate<Delivery> predicate) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setDeliverySelected(Delivery delivery, boolean selected) {
+        @Override public ObservableSet<Delivery> getDeliverySelection() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public List<Delivery> getSelectedDeliveriesInDisplayOrder() {
+        @Override public void clearDeliverySelection() {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public User getUser() {
+        @Override public void toggleDeliverySelection(Index index) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public StringProperty getUserAddress() {
+        @Override public void setDeliverySelected(Delivery delivery, boolean selected) {
             throw new AssertionError("This method should not be called.");
         }
-
-        @Override
-        public void setUser(User user) {
+        @Override public List<Delivery> getSelectedDeliveriesInDisplayOrder() {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override public User getUser() {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override public StringProperty getUserAddress() {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override public void setUser(User user) {
             throw new AssertionError("This method should not be called.");
         }
     }
 
-    /**
-     * A Model stub that contains a single person.
-     */
-    private class ModelStubWithPerson extends ModelStub {
-        private final Company person;
+    /** A Model stub that contains a single company. */
+    private class ModelStubWithCompany extends ModelStub {
+        private final Company company;
 
-        ModelStubWithPerson(Company person) {
-            requireNonNull(person);
-            this.person = person;
+        ModelStubWithCompany(Company company) {
+            requireNonNull(company);
+            this.company = company;
         }
 
         @Override
-        public boolean hasCompany(Company person) {
-            requireNonNull(person);
-            return this.person.isSameCompany(person);
+        public boolean hasCompany(Company company) {
+            requireNonNull(company);
+            return this.company.isSameCompany(company);
         }
     }
 
-    /**
-     * A Model stub that always accept the person being added.
-     */
-    private class ModelStubAcceptingPersonAdded extends ModelStub {
-        final ArrayList<Company> personsAdded = new ArrayList<>();
+    /** A Model stub that always accepts the company being added. */
+    private class ModelStubAcceptingCompanyAdded extends ModelStub {
+        final ArrayList<Company> companiesAdded = new ArrayList<>();
 
         @Override
-        public boolean hasCompany(Company person) {
-            requireNonNull(person);
-            return personsAdded.stream().anyMatch(person::isSameCompany);
+        public boolean hasCompany(Company company) {
+            requireNonNull(company);
+            return companiesAdded.stream().anyMatch(company::isSameCompany);
         }
 
         @Override
-        public void addCompany(Company person) {
-            requireNonNull(person);
-            personsAdded.add(person);
+        public void addCompany(Company company) {
+            requireNonNull(company);
+            companiesAdded.add(company);
         }
 
         @Override
@@ -309,5 +247,4 @@ public class AddCommandTest {
             return new AddressBook();
         }
     }
-
 }

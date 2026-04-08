@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.deliverycommands.SelectCommand;
 import seedu.address.logic.parser.deliveryparser.SelectCommandParser;
 
-public class SelectCommandParserTest {
+public class DeliverySelectCommandParserTest {
 
     private final SelectCommandParser parser = new SelectCommandParser();
 
@@ -30,8 +30,13 @@ public class SelectCommandParserTest {
     }
 
     @Test
-    public void parse_indices_success() {
+    public void parse_singleIndex_success() {
         assertParseSuccess(parser, "1", new SelectCommand(false, List.of(INDEX_FIRST_PERSON)));
-        assertParseSuccess(parser, "1 2", new SelectCommand(false, List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON)));
+    }
+
+    @Test
+    public void parse_multipleIndices_success() {
+        assertParseSuccess(parser, "1 2",
+                new SelectCommand(false, List.of(INDEX_FIRST_PERSON, INDEX_SECOND_PERSON)));
     }
 }

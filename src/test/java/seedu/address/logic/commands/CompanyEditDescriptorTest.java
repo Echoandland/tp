@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.companycommands.EditCommand.EditCompanyDescriptor;
 import seedu.address.testutil.EditCompanyDescriptorBuilder;
 
-public class EditPersonDescriptorTest {
+public class CompanyEditDescriptorTest {
 
     @Test
     public void equals() {
@@ -59,13 +59,13 @@ public class EditPersonDescriptorTest {
 
     @Test
     public void toStringMethod() {
-        EditCompanyDescriptor editPersonDescriptor = new EditCompanyDescriptor();
+        EditCompanyDescriptor descriptor = new EditCompanyDescriptor();
         String expected = EditCompanyDescriptor.class.getCanonicalName() + "{name="
-                + editPersonDescriptor.getName().orElse(null) + ", phone="
-                + editPersonDescriptor.getPhone().orElse(null) + ", email="
-                + editPersonDescriptor.getEmail().orElse(null) + ", address="
-                + editPersonDescriptor.getAddress().orElse(null) + ", tags="
-                + editPersonDescriptor.getTags().orElse(null) + "}";
-        assertEquals(expected, editPersonDescriptor.toString());
+                + descriptor.getName().orElse(null) + ", phone="
+                + descriptor.getPhone().orElse(null) + ", email="
+                + descriptor.getEmail().orElse(null) + ", address="
+                + descriptor.getAddress().orElse(null) + ", tags="
+                + descriptor.getTags().orElse(null) + "}";
+        assertEquals(expected, descriptor.toString());
     }
 }

@@ -32,45 +32,48 @@ import seedu.address.testutil.CompanyBuilder;
 import seedu.address.testutil.EditCompanyDescriptorBuilder;
 
 /**
- * Contains integration tests (interaction with the Model) and unit tests for EditCommand.
+ * Contains integration tests (interaction with the Model) and unit tests for
+ * {@code EditCommand} in the Company Book.
  */
-public class EditCommandTest {
+public class CompanyEditCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new DeliveryBook(), new UserPrefs());
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
-        Company editedPerson = new CompanyBuilder().build();
-        EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder(editedPerson).build();
+        Company editedCompany = new CompanyBuilder().build();
+        EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder(editedCompany).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS,
+                Messages.format(editedCompany));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new DeliveryBook(),
                 new UserPrefs());
-        expectedModel.setCompany(model.getFilteredCompanyList().get(0), editedPerson);
+        expectedModel.setCompany(model.getFilteredCompanyList().get(0), editedCompany);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
     public void execute_someFieldsSpecifiedUnfilteredList_success() {
-        Index indexLastPerson = Index.fromOneBased(model.getFilteredCompanyList().size());
-        Company lastPerson = model.getFilteredCompanyList().get(indexLastPerson.getZeroBased());
+        Index indexLastCompany = Index.fromOneBased(model.getFilteredCompanyList().size());
+        Company lastCompany = model.getFilteredCompanyList().get(indexLastCompany.getZeroBased());
 
-        CompanyBuilder personInList = new CompanyBuilder(lastPerson);
-        Company editedPerson = personInList.withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
+        CompanyBuilder companyInList = new CompanyBuilder(lastCompany);
+        Company editedCompany = companyInList.withName(VALID_NAME_BOB).withPhone(VALID_PHONE_BOB)
                 .withTags(VALID_TAG_HUSBAND).build();
 
         EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withPhone(VALID_PHONE_BOB).withTags(VALID_TAG_HUSBAND).build();
-        EditCommand editCommand = new EditCommand(indexLastPerson, descriptor);
+        EditCommand editCommand = new EditCommand(indexLastCompany, descriptor);
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS,
+                Messages.format(editedCompany));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new DeliveryBook(),
                 new UserPrefs());
-        expectedModel.setCompany(lastPerson, editedPerson);
+        expectedModel.setCompany(lastCompany, editedCompany);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
@@ -78,9 +81,10 @@ public class EditCommandTest {
     @Test
     public void execute_noFieldSpecifiedUnfilteredList_success() {
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, new EditCompanyDescriptor());
-        Company editedPerson = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Company editedCompany = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS,
+                Messages.format(editedCompany));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new DeliveryBook(),
                 new UserPrefs());
@@ -92,43 +96,44 @@ public class EditCommandTest {
     public void execute_filteredList_success() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        Company personInFilteredList = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Company editedPerson = new CompanyBuilder(personInFilteredList).withName(VALID_NAME_BOB).build();
+        Company companyInFilteredList = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Company editedCompany = new CompanyBuilder(companyInFilteredList).withName(VALID_NAME_BOB).build();
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
                 new EditCompanyDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS, Messages.format(editedPerson));
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_COMPANY_SUCCESS,
+                Messages.format(editedCompany));
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new DeliveryBook(),
                 new UserPrefs());
-        expectedModel.setCompany(model.getFilteredCompanyList().get(0), editedPerson);
+        expectedModel.setCompany(model.getFilteredCompanyList().get(0), editedCompany);
 
         assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
 
     @Test
-    public void execute_duplicatePersonUnfilteredList_failure() {
-        Company firstPerson = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
-        EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder(firstPerson).build();
+    public void execute_duplicateCompanyUnfilteredList_failure() {
+        Company firstCompany = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
+        EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder(firstCompany).build();
         EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_COMPANY);
     }
 
     @Test
-    public void execute_duplicatePersonFilteredList_failure() {
+    public void execute_duplicateCompanyFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        // edit person in filtered list into a duplicate in address book
-        Company personInList = model.getAddressBook().getCompanyList().get(INDEX_SECOND_PERSON.getZeroBased());
+        // edit company in filtered list into a duplicate in address book
+        Company companyInList = model.getAddressBook().getCompanyList().get(INDEX_SECOND_PERSON.getZeroBased());
         EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON,
-                new EditCompanyDescriptorBuilder(personInList).build());
+                new EditCompanyDescriptorBuilder(companyInList).build());
 
         assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_COMPANY);
     }
 
     @Test
-    public void execute_invalidPersonIndexUnfilteredList_failure() {
+    public void execute_invalidCompanyIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredCompanyList().size() + 1);
         EditCompanyDescriptor descriptor = new EditCompanyDescriptorBuilder().withName(VALID_NAME_BOB).build();
         EditCommand editCommand = new EditCommand(outOfBoundIndex, descriptor);
@@ -138,10 +143,10 @@ public class EditCommandTest {
 
     /**
      * Edit filtered list where index is larger than size of filtered list,
-     * but smaller than size of address book
+     * but smaller than size of address book.
      */
     @Test
-    public void execute_invalidPersonIndexFilteredList_failure() {
+    public void execute_invalidCompanyIndexFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
         Index outOfBoundIndex = INDEX_SECOND_PERSON;
         // ensures that outOfBoundIndex is still in bounds of address book list
@@ -187,5 +192,4 @@ public class EditCommandTest {
                 + editCompanyDescriptor + "}";
         assertEquals(expected, editCommand.toString());
     }
-
 }
