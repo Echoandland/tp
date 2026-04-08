@@ -23,5 +23,5 @@ src/test/data/sandbox/
 docs/_site/
 
 #Security
-"C:\Users\User\Desktop\Game Projects\WhereTheRainFalls-main\tp\src\main\java\KeyEncoder.java"
-"C:\Users\User\Desktop\Game Projects\WhereTheRainFalls-main\tp\src\main\java\KeyEncoder.class"
+/src/main/java/KeyEncoder.java
+/src/main/java/KeyEncoder.class

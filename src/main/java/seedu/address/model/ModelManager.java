@@ -53,6 +53,7 @@ public class ModelManager implements Model {
     private boolean isCompanyPackage;
     private final StringProperty userAddress = new SimpleStringProperty();
     private Comparator<Delivery> currentComparator = DELIVERY_DEFAULT_COMPARATOR;
+
     /**
      * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
      */
@@ -69,7 +70,7 @@ public class ModelManager implements Model {
         this.user = user;
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
-        this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelectionToFilteredList());
+        this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelection());
         userAddress.set("Start address: " + user.getDepotAddress());
     }
 
@@ -304,7 +305,7 @@ public class ModelManager implements Model {
         return ordered;
     }
 
-    private void pruneDeliverySelectionToFilteredList() {
+    private void pruneDeliverySelection() {
         deliverySelection.retainAll(new ArrayList<>(filteredDeliveries));
     }
 

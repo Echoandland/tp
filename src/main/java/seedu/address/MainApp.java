@@ -147,6 +147,9 @@ public class MainApp extends Application {
         return new ModelManager(initialAddressData, initialDeliveryData, userPrefs, initialUser);
     }
 
+
+
+
     private void initLogging(Config config) {
         LogsCenter.init(config);
     }
