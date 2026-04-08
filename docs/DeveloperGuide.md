@@ -229,7 +229,7 @@ Alternative 2: Split the app into two separate windows or two separate applicati
 ### Delivery routing
 #### Implementation
 
-MyCelia allows for user to query a Routing API to obtain an efficient travel plan for the chosen deliveries. This feature allows for users to view an optimized path they can take to finish their deliveries within their stipulated deadlines.
+MyCelia allows users to query a Routing API to obtain an efficient travel plan for the chosen deliveries. This feature allows for users to view an optimized path they can take to finish their deliveries within their stipulated deadlines.
 
 This is done using the `SelectCommand` which takes in the indexes of the chosen deliveries as argument. After selection, the `RouteCommand` is used to check the selected deliveries for their deadlines and addresses, ensuring both fields are valid before being sent as a request to the API.
 

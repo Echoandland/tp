@@ -24,8 +24,13 @@ import seedu.address.routing.model.RouteResult;
  *   2. Geocode all delivery addresses
  *   3. Call ORS optimization using User's vehicle profile
  *
+<<<<<<< Updated upstream
  * If ORS is unavailable, the service falls back to a local route plan
  * sorted by deadline so the app can still display a usable route order.
+=======
+ * If ORS is unavailable, the service falls back to a local nearest-neighbor
+ * route plan so the app can still display a usable route order.
+>>>>>>> Stashed changes
  */
 public class DeliveryRouterService {
 
@@ -38,7 +43,7 @@ public class DeliveryRouterService {
     private final OptimizationService optimizationService;
 
     /**
-     * Creates instance that contains the necessary routing features
+     * Creates instance that contains the necessary routing features.
      */
     public DeliveryRouterService() {
         OrsHttpClient client = new OrsHttpClient();
@@ -65,10 +70,15 @@ public class DeliveryRouterService {
             throw new IOException("No deliveries to route.");
         }
 
+<<<<<<< Updated upstream
         // Keep these validations as hard failures.
         validateNoOverdueDeliveries(deliveries);
 
         // Prepare addresses once so both primary path and fallback can reuse them.
+=======
+        validateNoOverdueDeliveries(deliveries);
+
+>>>>>>> Stashed changes
         List<String> addresses = new ArrayList<>();
         for (Delivery d : deliveries) {
             addresses.add(d.getCompany().getAddress().value);
@@ -99,7 +109,11 @@ public class DeliveryRouterService {
                     user.getVehicleProfile()
             );
         } catch (IOException e) {
+<<<<<<< Updated upstream
             logger.warning("ORS routing failed, falling back to local deadline-based routing. Reason: "
+=======
+            logger.warning("ORS routing failed, falling back to local nearest-neighbor routing. Reason: "
+>>>>>>> Stashed changes
                     + e.getMessage());
             return buildFallbackRouteResult(deliveries, user, depot, deliveryCoords);
         }
@@ -132,6 +146,7 @@ public class DeliveryRouterService {
             throw new IOException("Overdue Deliveries, please update the deadline of:\n"
                     + overdueDeliveries.stream().map(x -> x.toString() + "\n").toList());
         }
+<<<<<<< Updated upstream
     }
 
     /**
@@ -247,6 +262,195 @@ public class DeliveryRouterService {
         routes.add(new RouteResult.VehicleRoute(1, stops, geometry, depotLat, depotLon));
 
         return new RouteResult(routes, new ArrayList<>());
+    }
+
+    private String formatTime(long unixTimestamp) {
+        LocalTime time = Instant.ofEpochSecond(unixTimestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime();
+        return String.format("%02d:%02d", time.getHour(), time.getMinute());
+=======
+>>>>>>> Stashed changes
+    }
+
+    /**
+     * Builds ORS-compatible time windows for each delivery.
+     */
+    private List<int[]> buildTimeWindows(List<Delivery> deliveries) {
+        List<int[]> timeWindows = new ArrayList<>();
+        int earliest;
+
+        for (Delivery delivery : deliveries) {
+            earliest = (int) LocalDateTime.now()
+                    .atZone(ZoneId.systemDefault())
+                    .toEpochSecond();
+            int latest = (int) delivery.getDeadline().getValue()
+                    .atZone(ZoneId.systemDefault())
+                    .toEpochSecond();
+            timeWindows.add(new int[]{earliest, latest});
+        }
+
+        return timeWindows;
+    }
+
+    /**
+     * Builds service durations with a fixed service time per stop.
+     */
+    private List<Integer> buildServiceDurations(int numberOfStops) {
+        List<Integer> serviceDurations = new ArrayList<>();
+        for (int i = 0; i < numberOfStops; i++) {
+            serviceDurations.add(DEFAULT_SERVICE_SECS);
+        }
+        return serviceDurations;
+    }
+
+    /**
+     * Builds a local fallback route result when ORS is unavailable.
+     *
+     * Fallback strategy:
+     * - start from depot
+     * - repeatedly choose the nearest unvisited delivery
+     * - reuse already-geocoded coordinates when available
+     * - if a delivery cannot be geocoded, fall back to depot coordinates
+     */
+    private RouteResult buildFallbackRouteResult(List<Delivery> deliveries,
+                                                 User user,
+                                                 Coordinate depot,
+                                                 List<Coordinate> deliveryCoords) {
+        Coordinate depotCoord = resolveDepotCoordinate(user, depot);
+        List<Coordinate> resolvedDeliveryCoords = resolveDeliveryCoordinates(deliveries, deliveryCoords, depotCoord);
+
+        List<Integer> visitOrder = buildNearestNeighborOrder(depotCoord, resolvedDeliveryCoords);
+
+        List<RouteResult.Stop> stops = new ArrayList<>();
+        long estimatedArrival = Instant.now().getEpochSecond();
+        Coordinate current = depotCoord;
+
+        for (Integer originalIndex : visitOrder) {
+            Delivery delivery = deliveries.get(originalIndex);
+            Coordinate stopCoord = resolvedDeliveryCoords.get(originalIndex);
+
+            estimatedArrival += estimateTravelSeconds(current, stopCoord);
+
+            stops.add(new RouteResult.Stop(
+                    originalIndex,
+                    delivery.getCompany().getAddress().value,
+                    stopCoord.lat,
+                    stopCoord.lon,
+                    (int) estimatedArrival,
+                    formatTime(estimatedArrival)
+            ));
+
+            estimatedArrival += DEFAULT_SERVICE_SECS;
+            current = stopCoord;
+        }
+
+        List<double[]> geometry = new ArrayList<>();
+        List<RouteResult.VehicleRoute> routes = new ArrayList<>();
+        routes.add(new RouteResult.VehicleRoute(1, stops, geometry, depotCoord.lat, depotCoord.lon));
+
+        return new RouteResult(routes, new ArrayList<>());
+    }
+
+    /**
+     * Resolves depot coordinate, preferring the already geocoded value.
+     */
+    private Coordinate resolveDepotCoordinate(User user, Coordinate depot) {
+        if (depot != null) {
+            return depot;
+        }
+
+        try {
+            return geocodingService.geocode(user.getDepotAddress());
+        } catch (IOException e) {
+            logger.warning("Fallback route could not geocode depot; using placeholder coordinates.");
+            return new Coordinate(0.0, 0.0, user.getDepotAddress());
+        }
+    }
+
+    /**
+     * Resolves all delivery coordinates, preferring already geocoded values.
+     */
+    private List<Coordinate> resolveDeliveryCoordinates(List<Delivery> deliveries,
+                                                        List<Coordinate> deliveryCoords,
+                                                        Coordinate depotCoord) {
+        List<Coordinate> resolved = new ArrayList<>();
+
+        for (int i = 0; i < deliveries.size(); i++) {
+            if (deliveryCoords != null && i < deliveryCoords.size() && deliveryCoords.get(i) != null) {
+                resolved.add(deliveryCoords.get(i));
+                continue;
+            }
+
+            try {
+                Coordinate coord = geocodingService.geocode(deliveries.get(i).getCompany().getAddress().value);
+                resolved.add(coord);
+            } catch (IOException e) {
+                logger.warning("Fallback route could not geocode delivery address: "
+                        + deliveries.get(i).getCompany().getAddress().value
+                        + ". Using depot coordinates instead.");
+                resolved.add(depotCoord);
+            }
+        }
+
+        return resolved;
+    }
+
+    /**
+     * Builds a visit order using the nearest-neighbor heuristic.
+     */
+    private List<Integer> buildNearestNeighborOrder(Coordinate depotCoord, List<Coordinate> deliveryCoords) {
+        List<Integer> order = new ArrayList<>();
+        boolean[] visited = new boolean[deliveryCoords.size()];
+        Coordinate current = depotCoord;
+
+        for (int visitedCount = 0; visitedCount < deliveryCoords.size(); visitedCount++) {
+            int nearestIndex = -1;
+            double nearestDistance = Double.MAX_VALUE;
+
+            for (int i = 0; i < deliveryCoords.size(); i++) {
+                if (visited[i]) {
+                    continue;
+                }
+
+                double distance = squaredDistance(current, deliveryCoords.get(i));
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestIndex = i;
+                }
+            }
+
+            visited[nearestIndex] = true;
+            order.add(nearestIndex);
+            current = deliveryCoords.get(nearestIndex);
+        }
+
+        return order;
+    }
+
+    /**
+     * Uses squared Euclidean distance for comparing proximity.
+     * Square root is omitted because only relative ordering matters.
+     */
+    private double squaredDistance(Coordinate a, Coordinate b) {
+        double dLat = a.lat - b.lat;
+        double dLon = a.lon - b.lon;
+        return dLat * dLat + dLon * dLon;
+    }
+
+    /**
+     * Produces a rough travel-time estimate for fallback display.
+     * This is only used for approximate arrival times in fallback mode.
+     */
+    private int estimateTravelSeconds(Coordinate from, Coordinate to) {
+        double distance = Math.sqrt(squaredDistance(from, to));
+
+        // Very rough conversion for display purposes only.
+        // Keeps arrival times increasing in a more realistic way than fixed increments.
+        int estimated = (int) (distance * 10000);
+
+        // Ensure a minimum travel time so nearby points do not collapse to zero.
+        return Math.max(estimated, 300);
     }
 
     private String formatTime(long unixTimestamp) {
