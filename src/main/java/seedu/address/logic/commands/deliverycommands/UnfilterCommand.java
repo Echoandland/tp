@@ -8,18 +8,18 @@ import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.Model;
 
 /**
- * Lists all deliveries and sorts them by deadline, earliest first.
+ * Unfilters companies.
  */
-public class ListCommand extends Command {
+public class UnfilterCommand extends Command {
+    public static final String COMMAND_WORD = "unfilter";
 
-    public static final String COMMAND_WORD = "list";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": unfilters";
 
-    public static final String MESSAGE_SUCCESS = "Listed all deliveries sorted by deadline";
+    public static final String MESSAGE_SUCCESS = "Unfiltered all deliveries";
 
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        model.sortDeliveriesByDefault(PREDICATE_SHOW_ALL_DELIVERIES);
         model.updateFilteredDeliveryList(PREDICATE_SHOW_ALL_DELIVERIES);
         return new CommandResult(MESSAGE_SUCCESS);
     }
