@@ -23,22 +23,22 @@ import seedu.address.model.company.Company;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for
- * {@code DeleteCommand}.
+ * {@code DeleteCommand} in the Company Book.
  */
-public class DeleteCommandTest {
+public class CompanyDeleteCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new DeliveryBook(), new UserPrefs());
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
-        Company personToDelete = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Company companyToDelete = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_COMPANY_SUCCESS,
-                Messages.format(personToDelete));
+                Messages.format(companyToDelete));
 
         ModelManager expectedModel = new ModelManager(model.getAddressBook(), new DeliveryBook(), new UserPrefs());
-        expectedModel.deleteCompany(personToDelete);
+        expectedModel.deleteCompany(companyToDelete);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
     }
@@ -55,15 +55,15 @@ public class DeleteCommandTest {
     public void execute_validIndexFilteredList_success() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        Company personToDelete = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Company companyToDelete = model.getFilteredCompanyList().get(INDEX_FIRST_PERSON.getZeroBased());
         DeleteCommand deleteCommand = new DeleteCommand(INDEX_FIRST_PERSON);
 
         String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_COMPANY_SUCCESS,
-                Messages.format(personToDelete));
+                Messages.format(companyToDelete));
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new DeliveryBook(), new UserPrefs());
-        expectedModel.deleteCompany(personToDelete);
-        showNoPerson(expectedModel);
+        expectedModel.deleteCompany(companyToDelete);
+        showNoCompany(expectedModel);
 
         assertCommandSuccess(deleteCommand, model, expectedMessage, expectedModel);
     }
@@ -99,7 +99,7 @@ public class DeleteCommandTest {
         // null -> returns false
         assertFalse(deleteFirstCommand.equals(null));
 
-        // different person -> returns false
+        // different index -> returns false
         assertFalse(deleteFirstCommand.equals(deleteSecondCommand));
     }
 
@@ -111,12 +111,9 @@ public class DeleteCommandTest {
         assertEquals(expected, deleteCommand.toString());
     }
 
-    /**
-     * Updates {@code model}'s filtered list to show no one.
-     */
-    private void showNoPerson(Model model) {
+    /** Updates {@code model}'s filtered list to show no companies. */
+    private void showNoCompany(Model model) {
         model.updateFilteredCompanyList(p -> false);
-
         assertTrue(model.getFilteredCompanyList().isEmpty());
     }
 }

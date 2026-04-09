@@ -24,7 +24,7 @@ import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 
-public class RouteCommandTest {
+public class DeliveryRouteCommandTest {
 
     private static final Company DELL = new Company(new Name("Dell"), new Phone("99272758"),
             new Email("dell@example.com"),
@@ -32,7 +32,7 @@ public class RouteCommandTest {
             getTagSet("test"));
 
     private Model buildModelWithDelivery() {
-        Delivery d1 = new Delivery(new Product("A"), DELL,
+        Delivery d1 = new Delivery(new Product("Laptop"), DELL,
                 new Deadline("2026-03-26 10:00"), Collections.emptySet());
         Model model = new ModelManager(new seedu.address.model.AddressBook(), new DeliveryBook(), new UserPrefs());
         model.addDelivery(d1);

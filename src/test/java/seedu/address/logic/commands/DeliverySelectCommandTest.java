@@ -29,7 +29,7 @@ import seedu.address.model.delivery.Deadline;
 import seedu.address.model.delivery.Delivery;
 import seedu.address.model.delivery.Product;
 
-public class SelectCommandTest {
+public class DeliverySelectCommandTest {
 
     private static final Company DELL = new Company(new Name("Dell"), new Phone("99272758"),
             new Email("dell@example.com"),
@@ -48,7 +48,7 @@ public class SelectCommandTest {
     }
 
     @Test
-    public void execute_clear_success() {
+    public void execute_clearSelection_success() {
         Model model = buildModelWithTwoDeliveries();
         model.setDeliverySelected(model.getFilteredDeliveryList().get(0), true);
         assertFalse(model.getSelectedDeliveriesInDisplayOrder().isEmpty());
@@ -68,17 +68,19 @@ public class SelectCommandTest {
         SelectCommand selectFirst = new SelectCommand(false, List.of(INDEX_FIRST_PERSON));
         Model expectedOneSelected = new ModelManager(model.getAddressBook(), model.getDeliveryBook(), new UserPrefs());
         expectedOneSelected.setDeliverySelected(expectedOneSelected.getFilteredDeliveryList().get(0), true);
+
         assertCommandSuccess(selectFirst, model,
                 String.format(SelectCommand.MESSAGE_SELECT_SUCCESS, 1, 1), expectedOneSelected);
         assertEquals(List.of(list.get(0)), model.getSelectedDeliveriesInDisplayOrder());
 
+        // selecting the same index again should not change count
         assertCommandSuccess(selectFirst, model,
                 String.format(SelectCommand.MESSAGE_SELECT_SUCCESS, 1, 1), expectedOneSelected);
         assertEquals(List.of(list.get(0)), model.getSelectedDeliveriesInDisplayOrder());
     }
 
     @Test
-    public void execute_select_accumulates() throws Exception {
+    public void execute_selectMultiple_accumulates() throws Exception {
         Model model = buildModelWithTwoDeliveries();
         List<Delivery> list = model.getFilteredDeliveryList();
 
@@ -91,15 +93,30 @@ public class SelectCommandTest {
     @Test
     public void execute_invalidIndex_throwsCommandException() {
         Model model = buildModelWithTwoDeliveries();
-        Index bad = Index.fromOneBased(99);
-        assertCommandFailure(new SelectCommand(false, List.of(bad)), model,
+        Index outOfBound = Index.fromOneBased(99);
+        assertCommandFailure(new SelectCommand(false, List.of(outOfBound)), model,
                 Messages.MESSAGE_INVALID_DELIVERY_DISPLAYED_INDEX);
     }
 
     @Test
-    public void equalsTest() {
-        assertEquals(new SelectCommand(false, List.of(INDEX_FIRST_PERSON)),
-                new SelectCommand(false, List.of(INDEX_FIRST_PERSON)));
-        assertFalse(new SelectCommand(true, List.of()).equals(new SelectCommand(false, List.of(INDEX_FIRST_PERSON))));
+    public void equals() {
+        SelectCommand selectFirst = new SelectCommand(false, List.of(INDEX_FIRST_PERSON));
+        SelectCommand selectFirstCopy = new SelectCommand(false, List.of(INDEX_FIRST_PERSON));
+        SelectCommand clearAll = new SelectCommand(true, List.of());
+
+        // same values -> true
+        assertEquals(selectFirst, selectFirstCopy);
+
+        // same object -> true
+        assertTrue(selectFirst.equals(selectFirst));
+
+        // null -> false
+        assertFalse(selectFirst.equals(null));
+
+        // different type -> false
+        assertFalse(selectFirst.equals("string"));
+
+        // clear vs select -> false
+        assertFalse(selectFirst.equals(clearAll));
     }
 }

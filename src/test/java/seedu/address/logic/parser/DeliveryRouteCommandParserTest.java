@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import seedu.address.logic.commands.deliverycommands.RouteCommand;
 import seedu.address.logic.parser.deliveryparser.RouteCommandParser;
 
-public class RouteCommandParserTest {
+public class DeliveryRouteCommandParserTest {
 
     private final RouteCommandParser parser = new RouteCommandParser();
 
@@ -20,7 +20,7 @@ public class RouteCommandParserTest {
     }
 
     @Test
-    public void parse_empty_success() {
+    public void parse_emptyArgs_success() {
         assertParseSuccess(parser, "", new RouteCommand());
         assertParseSuccess(parser, "   ", new RouteCommand());
     }
