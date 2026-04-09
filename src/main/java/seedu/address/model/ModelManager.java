@@ -49,10 +49,12 @@ public class ModelManager implements Model {
     private User user;
     private final FilteredList<Company> filteredCompanies;
     private final FilteredList<Delivery> filteredDeliveries;
-    private final ObservableSet<Delivery> deliverySelection = FXCollections.observableSet(new LinkedHashSet<>());
+    private final ObservableSet<Delivery> deliverySelection =
+            FXCollections.observableSet(new LinkedHashSet<>());
     private boolean isCompanyPackage;
     private final StringProperty userAddress = new SimpleStringProperty();
     private Comparator<Delivery> currentComparator = DELIVERY_DEFAULT_COMPARATOR;
+
     /**
      * Initializes a ModelManager with the given addressBook, deliveryBook, userPrefs and user.
      */
@@ -69,7 +71,8 @@ public class ModelManager implements Model {
         this.user = user;
         this.filteredCompanies = new FilteredList<>(this.addressBook.getCompanyList());
         this.filteredDeliveries = new FilteredList<>(this.deliveryBook.getDeliveryList());
-        this.filteredDeliveries.addListener((ListChangeListener<Delivery>) c -> pruneDeliverySelectionToFilteredList());
+        this.filteredDeliveries.addListener(
+                (ListChangeListener<Delivery>) c -> pruneDeliverySelection());
         userAddress.set("Start address: " + user.getDepotAddress());
     }
 
@@ -81,6 +84,9 @@ public class ModelManager implements Model {
         this(addressBook, deliveryBook, userPrefs, SampleDataUtil.getSampleUser());
     }
 
+    /**
+     * Creates a ModelManager with empty address book, delivery book and default user prefs.
+     */
     public ModelManager() {
         this(new AddressBook(), new DeliveryBook(), new UserPrefs());
     }
@@ -304,7 +310,11 @@ public class ModelManager implements Model {
         return ordered;
     }
 
-    private void pruneDeliverySelectionToFilteredList() {
+    /**
+     * Removes any deliveries from the selection set that are no longer
+     * present in the filtered list, keeping selection consistent with the current view.
+     */
+    private void pruneDeliverySelection() {
         deliverySelection.retainAll(new ArrayList<>(filteredDeliveries));
     }
 
