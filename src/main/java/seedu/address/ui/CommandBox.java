@@ -41,6 +41,7 @@ public class CommandBox extends UiPart<Region> {
         COMPANY_COMMANDS.put("edit", "INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]...");
         COMPANY_COMMANDS.put("delete", "INDEX");
         COMPANY_COMMANDS.put("find", "KEYWORD [MORE_KEYWORDS]...");
+        COMPANY_COMMANDS.put("filter", "c/NAME [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...");
         COMPANY_COMMANDS.put("list", "");
         COMPANY_COMMANDS.put("clear", "");
         COMPANY_COMMANDS.put("switch", "");
@@ -57,6 +58,7 @@ public class CommandBox extends UiPart<Region> {
         DELIVERY_COMMANDS.put("sort", "c/COMPANY");
         DELIVERY_COMMANDS.put("route", "");
         DELIVERY_COMMANDS.put("find", "KEYWORD [MORE_KEYWORDS]...");
+        DELIVERY_COMMANDS.put("filter", "[pr/PRODUCT] [c/COMPANY] [dl/DEADLINE] [t/TAG]...");
         DELIVERY_COMMANDS.put("list", "");
         DELIVERY_COMMANDS.put("clear", "");
         DELIVERY_COMMANDS.put("switch", "");
@@ -94,6 +96,8 @@ public class CommandBox extends UiPart<Region> {
                 seedu.address.logic.commands.deliverycommands.MarkCommand.MESSAGE_USAGE);
         DELIVERY_USAGE.put("unmark",
                 seedu.address.logic.commands.deliverycommands.UnmarkCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("route",
+                seedu.address.logic.commands.deliverycommands.RouteCommand.MESSAGE_USAGE);
         DELIVERY_USAGE.put("find", "find KEYWORD — search deliveries by product name");
         DELIVERY_USAGE.put("set",
                 seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
