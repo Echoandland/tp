@@ -1,6 +1,14 @@
 [![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
 
-> _Keeping your business network connected_
+* Table of Contents
+  {:toc}
+
+--------------------------------------------------------------------------------------------------------------------
+
+# MyCelia User Guide
+
+{: .highlight }
+*MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same.*
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
@@ -8,9 +16,40 @@ MyCelia is a command-line-driven desktop application for B2B delivery coordinato
 
 ---
 
+## Quick Start
+
+That's it. MyCelia creates its data files on first launch and loads sample data so you can get your bearings immediately.
+
+Follow these steps to get MyCelia running:
+
+1. Ensure Java 17 or above is installed.
+    * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
+
+   {: .important }
+   Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+
+2. Download the latest version of MyCelia [here](https://github.com/AY2526S2-CS2103T-W11-4/tp/releases).
+    * Download the `.jar` file.
+
+3. Open a terminal for your Operating System (OS) and launch MyCelia:
+
+Open **Command Prompt** and run:
+
+```bash
+cd PATH_TO_FOLDER_WITH_JAR_FILE
+java -jar vendorvault.jar
+```
+
+You're all set! MyCelia should come with Sample Data for you to get started on using the basic features.
+
+{: .tip }
+Click the `help` button at the top right of the app to get access to this [user guide](https://ay2526s2-cs2103t-w11-4.github.io/tp/UserGuide.html) for all the information
+
+---
+
 ## What's Inside
 
-MyCelia runs two books simultaneously:
+MyCelia keeps track of two books simultaneously:
 
 * **Company Book** — your directory of business partners, suppliers, and clients
 * **Delivery Book** — your log of outgoing deliveries linked to those companies
@@ -19,19 +58,7 @@ Switch between them with a single command or via the UI tabs. Everything saves a
 
 ---
 
-## Quick Start
-
-**Requirements:** Java 17 or later
-
-```
-java -jar MyCelia.jar
-```
-
-That's it. MyCelia creates its data files on first launch and loads sample data so you can get your bearings immediately.
-
----
-
-## The Interface
+### The Interface
 
 MyCelia can be used entirely by keyboard, but several actions are also accessible through the UI directly.
 
@@ -81,7 +108,7 @@ The Delivery Book view shows all logged deliveries. Deliveries marked as deliver
 
 ### Routes View
 
-<img src="images/routes-view.png" width="700" alt="Routes View" />
+<img src="images/route-view.png" width="600" alt="Routes View"/>
 
 The Routes view displays an interactive map with the optimised route for selected deliveries. Switch to it using the **Routes** pill button, or trigger it automatically via the `route` command or the **Plan Today's Route** button.
 
@@ -165,7 +192,7 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 ---
 
-## How Data Works
+## How Storage Works
 
 * All data saves automatically after every command — no manual save needed
 * Company records live in `addressbook.json`
@@ -176,37 +203,9 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 ---
 
-## Project Structure
-
-```
-src/
-├── main/java/seedu/address/
-│   ├── logic/
-│   │   ├── commands/
-│   │   │   ├── companycommands/   # add, edit, delete, find, list, clear, switch
-│   │   │   ├── deliverycommands/  # add, edit, delete, mark, unmark, find, list, clear, select, sort, route, switch
-│   │   │   ├── SetCommand.java    # set (shared — available in both modes)
-│   │   │   └── uicommand/         # help, exit
-│   │   └── parser/
-│   │       ├── companyparser/
-│   │       └── deliveryparser/
-│   ├── model/
-│   │   ├── company/               # Company, Name, Phone, Email, Address
-│   │   └── delivery/              # Delivery, Product, Company, Address
-│   ├── storage/                   # JSON persistence for both books
-│   └── ui/                        # JavaFX interface components
-```
-
----
-
 ## Built With
 
 * Java 17
 * JavaFX
 * Jackson (JSON serialisation)
 * JUnit 5 (testing)
-
----
-
-*MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same.*
-
