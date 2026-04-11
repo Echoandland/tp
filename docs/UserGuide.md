@@ -116,6 +116,13 @@ The Routes view displays an interactive map with the optimised route for selecte
 
 ## Commands
 
+### Notes about command format
+
+* Words in `UPPER_CASE` are parameters to be supplied by the user.
+* Items in square brackets are optional.
+* Parameters can be provided in any order unless otherwise stated.
+* For commands that do not require parameters (e.g. `help`, `switch`, `exit`), any additional trailing input will be ignored.
+
 ### Global Commands
 
 These commands work in both the Company Book and Delivery Book.
@@ -138,7 +145,8 @@ Manage your network of business contacts. These commands are active when you're 
 |Add|`add n/NAME p/PHONE e/EMAIL a/ADDRESS \[t/TAG]...`|`add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`|
 |Edit|`edit INDEX \[n/NAME] \[p/PHONE] \[e/EMAIL] \[a/ADDRESS] \[t/TAG]...`|`edit 2 p/65559999 e/new@acme.com`|
 |Delete|`delete INDEX`|`delete 3`|
-|Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find acme tech logistics`|
+|Filter|`filter [c/NAME] [a/ADDRESS] [p/PHONE] [e/EMAIL] [t/TAG]...`|`filter c/Dell t/important`|
+|Clear filter|`unfilter`|`unfilter`|
 |List all|`list`|`list`|
 |Clear all|`clear`|`clear`|
 
@@ -152,24 +160,46 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
+**Filter prefixes:**
+
+|Prefix|Meaning|
+|-|-|
+|`c/`|Company name contains keyword|
+|`a/`|Address contains keyword|
+|`p/`|Phone number contains digits|
+|`e/`|Email contains keyword|
+|`t/`|Tag matches keyword|
+
+#### Notes
+
+* Company names may contain only alphanumeric English characters and spaces.
+* Addresses currently support only standard English keyboard characters.
+* Tags may contain only alphanumeric English characters.
+* Specifying one or more `t/` fields in an `edit` command replaces all existing tags.
+
 ---
 
 ### Delivery Book
 
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
+When adding or editing a delivery, the specified company must already exist in the Company Book.  
+If no matching company is found, the command will fail.  
+The delivery is linked directly to the existing company record instead of storing a separate company name string.
+
 |Command|Format|Example|
 |-|-|-|
-|Add|`add pr/PRODUCT c/COMPANY dl/DEADLINE a/ADDRESS \[t/TAG]...`|`add pr/Industrial Printer c/Acme Supplies dl/2026-03-25 14:30 a/10 Anson Road t/urgent`|
-|Edit|`edit INDEX \[pr/PRODUCT] \[c/COMPANY] \[dl/DEADLINE] \[a/ADDRESS] \[t/TAG]...`|`edit 1 dl/2026-03-26 09:00 a/20 Harbour Front Walk t/fragile`|
+|Add|`add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`|`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
 |Delete|`delete INDEX`|`delete 2`|
+|Edit|`edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`|`edit 1 d/2026-03-26 09:00 t/fragile`|
 |Mark delivered|`mark INDEX`|`mark 1`|
 |Unmark|`unmark INDEX`|`unmark 1`|
 |Select for routing|`select INDEX [INDEX]...`|`select 1 3 5`|
 |Clear selection|`select none`|`select none`|
 |Plan route|`route`|`route`|
-|Find|`find KEYWORD \[MORE\_KEYWORDS]...`|`find printer laptop`|
-|List all|`list`|`list`|
+|Filter|`filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`|`filter c/Dell p/Laptop t/fragile`|
+|Reset filter|`unfilter`|`unfilter`|
+List all|`list`|`list`|
 |Sort company by deadline|`sort c/COMPANY`|`sort c/Acme Supplies`|
 |Clear all|`clear`|`clear`|
 
@@ -177,12 +207,19 @@ Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from t
 
 |Prefix|Field|Required|
 |-|-|-|
-|`pr/`|Product name|Yes|
+|`p/`|Product name|Yes|
 |`c/`|Company name|Yes|
-|`dl/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
-|`a/`|Delivery address|Yes|
+|`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
 
+#### Notes
+
+* The company specified in `c/COMPANY` must already exist in the Company Book.
+* Company matching is case-insensitive.
+* Deadlines must follow the format `yyyy-MM-dd HH:mm`.
+* A duplicate delivery cannot be added.
+
+Deliveries are sorted by deadline in ascending order, so the earliest deadline appears first.
 **Notes on specific commands:**
 
 - **`list`** — shows all deliveries and re-sorts the entire list by deadline (earliest first). Use this to reset after a `find` or `sort` filter.
