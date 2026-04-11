@@ -204,8 +204,8 @@ public class CommandBox extends UiPart<Region> {
             if (usageMap.containsKey(word)) {
                 setHintToErrorUsage(usageMap.get(word));
             } else {
-                hintLabel.setText("");
-                hintLabel.getStyleClass().remove(ERROR_HINT_STYLE_CLASS);
+                setHintToErrorUsage("Unknown command. Type 'help' to open the help window, "
+                        + "or visit: https://ay2526s2-cs2103t-w11-4.github.io/tp/UserGuide.html");
             }
         }
     }
