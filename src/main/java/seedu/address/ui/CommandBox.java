@@ -73,6 +73,7 @@ public class CommandBox extends UiPart<Region> {
                 seedu.address.logic.commands.companycommands.DeleteCommand.MESSAGE_USAGE);
         COMPANY_USAGE.put("filter",
                 seedu.address.logic.commands.companycommands.FilterCommand.MESSAGE_USAGE);
+        COMPANY_USAGE.put("find", "find KEYWORD — search companies by name");
         COMPANY_USAGE.put("set",
                 seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
 
@@ -93,6 +94,7 @@ public class CommandBox extends UiPart<Region> {
                 seedu.address.logic.commands.deliverycommands.MarkCommand.MESSAGE_USAGE);
         DELIVERY_USAGE.put("unmark",
                 seedu.address.logic.commands.deliverycommands.UnmarkCommand.MESSAGE_USAGE);
+        DELIVERY_USAGE.put("find", "find KEYWORD — search deliveries by product name");
         DELIVERY_USAGE.put("set",
                 seedu.address.logic.commands.SetCommand.MESSAGE_USAGE);
     }
@@ -199,7 +201,7 @@ public class CommandBox extends UiPart<Region> {
             setStyleToIndicateCommandFailure();
             String word = commandText.trim().split("\\s+", 2)[0].toLowerCase();
             Map<String, String> usageMap = model.getCompanyPackage() ? COMPANY_USAGE : DELIVERY_USAGE;
-            if (e instanceof ParseException && usageMap.containsKey(word)) {
+            if (usageMap.containsKey(word)) {
                 setHintToErrorUsage(usageMap.get(word));
             } else {
                 hintLabel.setText("");

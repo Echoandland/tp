@@ -93,6 +93,9 @@ public class DeliveryBookParser {
         case FilterCommand.COMMAND_WORD:
             return new FilterCommandParser().parse(arguments);
 
+        case "find":
+            return new FilterCommandParser().parse("p/" + arguments.trim());
+
         case UnfilterCommand.COMMAND_WORD:
             return new UnfilterCommand();
 

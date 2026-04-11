@@ -187,6 +187,8 @@
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-padding: 0;
+    -fx-vbar-policy: never;
+    -fx-hbar-policy: never;
 }
 
 .result-display .scroll-pane > .viewport {
