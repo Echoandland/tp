@@ -25,7 +25,7 @@ Follow these steps to get MyCelia running:
 1. Ensure Java 17 or above is installed.
     * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
 
-<div class="note">
+<div class="warning" markdown="1">
  Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 </div>
 
@@ -42,9 +42,6 @@ java -jar vendorvault.jar
 ```
 
 You're all set! MyCelia should come with Sample Data for you to get started on using the basic features.
-
-{: .tip }
-Click the `help` button at the top right of the app to get access to this [user guide](https://ay2526s2-cs2103t-w11-4.github.io/tp/UserGuide.html) for all the information
 
 ---
 
@@ -148,8 +145,9 @@ Format:
 switch
 ```
 
-> [!TIP]
-> You can also switch books using the **Companies** or **Deliveries** buttons in the navigation bar.
+<div class="note" markdown="1">
+You can also switch books using the **Companies** or **Deliveries** buttons in the navigation bar.
+</div>
 
 ---
 
@@ -179,9 +177,9 @@ Format:
 help
 ```
 
-> [!TIP]
-> You can also open the help window by clicking the **Help** button in the navigation bar.
-
+<div class="note" markdown="1">
+You can also open the help window by clicking the **Help** button in the navigation bar.
+</div>
 ---
 
 #### Exiting the app: `exit`
@@ -251,8 +249,9 @@ Examples:
 - `add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`
 - `add n/Dell Singapore p/65551234 e/contact@dell.com a/1 Harbour Front Ave t/electronics t/important`
 
-> [!TIP]
-> A company can have any number of tags, or none at all.
+<div class="note" markdown="1">
+A company can have any number of tags, or none at all.
+</div>
 
 <details>
 <summary>What companies are considered duplicates?</summary>
@@ -387,8 +386,9 @@ clear
 
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
-> [!IMPORTANT]
-> The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
+<div class="warning" markdown="1"> 
+The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
+</div>
 
 | Command               | Format                                                       |Example|
 |-----------------------|--------------------------------------------------------------|-|
@@ -459,9 +459,9 @@ Format:
 list
 ```
 
-> [!TIP]
-> Use `list` to reset the view after a `sort` command.
-
+<div class="note" markdown="1">
+Use `list` to reset the view after a `sort` command.
+</div>
 ---
 
 #### Editing a delivery: `edit`
@@ -537,8 +537,9 @@ Format:
 route
 ```
 
-> [!IMPORTANT]
-> At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
+<div class="warning" markdown="1"> 
+At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
+</div>
 
 ---
 

@@ -16,6 +16,18 @@
   background: #eef6fc;
   padding: 10px;
   margin: 10px 0;
+
+  a {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+
+    &::before {
+      content: "📝 ";
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
 }
 
 .warning {
@@ -23,4 +35,16 @@
   background: #fdecea;
   padding: 10px;
   margin: 10px 0;
+
+  a {
+    color: #c0392b;
+    text-decoration: underline;
+  }
+
+  &::before {
+      content: "⚠️ ";
+      font-weight: bold;
+      display: block;
+      margin-bottom: 4px;
+    }
 }
