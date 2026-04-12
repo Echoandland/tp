@@ -25,8 +25,9 @@ Follow these steps to get MyCelia running:
 1. Ensure Java 17 or above is installed.
     * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
 
-> [!NOTE]  
-> Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+<div class="note">
+ Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+</div>
 
 2. Download the latest version of MyCelia [here](https://github.com/AY2526S2-CS2103T-W11-4/tp/releases).
     * Download the `.jar` file.
