@@ -360,8 +360,11 @@ delete INDEX
 Example:
 - `delete 3`
 
-> [!IMPORTANT]
-> Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
+<div class="warning" markdown="1">
+**⚠️ Important:**
+
+Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
+</div>
 
 For possible errors, refer to the [troubleshooting guide](#troubleshooting-delete-company) below.
 
