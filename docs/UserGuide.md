@@ -1,14 +1,17 @@
 [![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/AY2526S2-CS2103T-W11-4/tp)
 
-* Table of Contents
-  {:toc}
+---
+layout: default
+title: User Guide
+---
+* TOC
+{:toc}
 
 --------------------------------------------------------------------------------------------------------------------
 
-# MyCelia User Guide
+_MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same._
 
-{: .highlight }
-*MyCelia — named after mycelium, the underground network that keeps fungi connected. Because your business relationships deserve the same.*
+# MyCelia User Guide
 
 MyCelia is a command-line-driven desktop application for B2B delivery coordinators. Manage your business contacts and track outgoing deliveries — all from a single keyboard-driven interface. No clicking around. Just type and go.
 
@@ -64,7 +67,7 @@ MyCelia can be used entirely by keyboard, but several actions are also accessibl
 
 ### Navigation Bar
 
-<img src="images/navigation-bar.png" width="500" alt="Navigation Bar" />
+<img src="images/navigation-bar.png" width="800" alt="Navigation Bar" />
 
 At the top of the window is a pill toggle bar with navigation buttons:
 
@@ -77,7 +80,7 @@ At the top of the window is a pill toggle bar with navigation buttons:
 
 ### Command Terminal
 
-<img src="images/command-terminal.png" width="600" alt="Command Terminal" />
+<img src="images/command-terminal.png" width="800" alt="Command Terminal" />
 
 |Box|What it does|
 |-|-|
@@ -90,7 +93,7 @@ Every UI action has an equivalent command. Use whichever feels faster for your w
 
 ### Help Window
 
-<img src="images/help-window.png" width="500" alt="Help Window" />
+<img src="images/help-window.png" width="800" alt="Help Window" />
 
 The help window provides a link to this user guide.
 

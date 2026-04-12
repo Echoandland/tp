@@ -10,3 +10,17 @@
     height: 21px;
     width: 21px
 }
+
+.note {
+  border-left: 4px solid #3498db;
+  background: #eef6fc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.warning {
+  border-left: 4px solid #e74c3c;
+  background: #fdecea;
+  padding: 10px;
+  margin: 10px 0;
+}
