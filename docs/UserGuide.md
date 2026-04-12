@@ -167,8 +167,12 @@ set a/ADDRESS
 Example:
 - `set a/10 Anson Road, Singapore 079903`
 
-> [!NOTE]
-> This address is used as the origin when `route` plans an optimised delivery route. Set it once and it persists across sessions.
+<div class="note" markdown="1">
+📝 **Note:**
+
+This address is used as the origin when `route` plans an optimised delivery route. Set it once and it persists across sessions.
+
+</div>
 
 ---
 
@@ -186,6 +190,7 @@ help
 
 You can also open the help window by clicking the **Help** button in the navigation bar.
 </div>
+
 ---
 
 #### Exiting the app: `exit`
@@ -261,8 +266,8 @@ Examples:
 A company can have any number of tags, or none at all.
 </div>
 
-<details>
-<summary>What companies are considered duplicates?</summary>
+<details markdown="1">
+<summary markdown="1">What companies are considered duplicates?</summary>
 
 A company is considered a duplicate if it has the **same name and email** as an existing entry. Company names are case-insensitive for matching purposes.
 
@@ -299,8 +304,8 @@ Examples:
 > [!NOTE]
 > Specifying one or more `t/` fields replaces **all** existing tags — tags are not cumulative.
 
-<details>
-<summary>How do I remove all tags from a company?</summary>
+<details markdown="1">
+<summary markdown="1">How do I remove all tags from a company?</summary>
 
 Specify `edit INDEX t/` without any tag value. This clears all existing tags from the entry.
 
@@ -450,8 +455,8 @@ Examples:
 > [!NOTE]
 > Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-insensitive.
 
-<details>
-<summary>What deliveries are considered duplicates?</summary>
+<details markdown="1">
+<summary markdown="1">What deliveries are considered duplicates?</summary>
 
 A delivery is a duplicate if it has the **same product, company, and deadline** as an existing delivery. Duplicate deliveries cannot be added.
 
@@ -630,8 +635,8 @@ clear
 
 ## FAQ
 
-<details>
-<summary>How do I back up my data?</summary>
+<details markdown="1">
+<summary markdown="1">How do I back up my data?</summary>
 
 - Locate the folder where MyCelia's `.jar` file is stored.
 - Copy both `addressbook.json` and `deliverybook.json` to a safe location of your choice.
@@ -640,8 +645,8 @@ Both files contain all your company and delivery data respectively.
 
 </details>
 
-<details>
-<summary>How do I edit my data directly?</summary>
+<details markdown="1">
+<summary markdown="1">How do I edit my data directly?</summary>
 
 - Locate the folder where MyCelia's `.jar` file is stored.
 - Open `addressbook.json` or `deliverybook.json` in a text editor.
@@ -679,8 +684,8 @@ Both files contain all your company and delivery data respectively.
 
 </details>
 
-<details>
-<summary>I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
+<details markdown="1">
+<summary markdown="1">I edited the data file directly and MyCelia has some missing data. What should I do?</summary>
 
 Try the following steps:
 
@@ -689,8 +694,8 @@ Try the following steps:
 
 </details>
 
-<details>
-<summary>How do I transfer my data to another computer?</summary>
+<details markdown="1">
+<summary markdown="1">How do I transfer my data to another computer?</summary>
 
 1. [Install MyCelia](#quick-start) on the new computer.
 2. On your old computer, locate the folder containing the `.jar` file.
@@ -700,8 +705,8 @@ Try the following steps:
 
 </details>
 
-<details>
-<summary>Why did my route planning fail to assign some deliveries?</summary>
+<details markdown="1">
+<summary markdown="1">Why did my route planning fail to assign some deliveries?</summary>
 
 Route planning requires at least one delivery to be selected. Use `select INDEX` or check the delivery's checkbox in the list, then run `route` again.
 
@@ -709,15 +714,15 @@ Also ensure your origin address has been set with `set a/ADDRESS`.
 
 </details>
 
-<details>
-<summary>Why did is my route planning taking so long?</summary>
+<details markdown="1">
+<summary markdown="1">Why did is my route planning taking so long?</summary>
 
 Route planning requires internet connection. If you have that it is taking too long, please switch to a better connection.
 
 </details>
 
-<details>
-<summary>Why does adding a delivery fail even though the company exists?</summary>
+<details markdown="1">
+<summary markdown="1">Why does adding a delivery fail even though the company exists?</summary>
 
 Company matching is case-insensitive but must be an exact name match — no partial matches. Make sure the name in `c/COMPANY` matches the name stored in the Company Book exactly.
 
