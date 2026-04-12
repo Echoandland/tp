@@ -123,6 +123,9 @@ public class CommandBox extends UiPart<Region> {
 
         commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::onKeyPressed);
 
+        hintLabel.setWrapText(true);
+        hintLabel.setMinHeight(Region.USE_PREF_SIZE);
+
         refreshHint("");
     }
 
@@ -203,7 +206,7 @@ public class CommandBox extends UiPart<Region> {
             setStyleToIndicateCommandFailure();
             String word = commandText.trim().split("\\s+", 2)[0].toLowerCase();
             Map<String, String> usageMap = model.getCompanyPackage() ? COMPANY_USAGE : DELIVERY_USAGE;
-            if (usageMap.containsKey(word)) {
+            if (e instanceof ParseException && usageMap.containsKey(word)) {
                 setHintToErrorUsage(usageMap.get(word));
             } else {
                 setHintToErrorUsage(e.getMessage());
