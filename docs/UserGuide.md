@@ -26,6 +26,8 @@ Follow these steps to get MyCelia running:
     * Full guide for installation [here](https://se-education.org/guides/tutorials/javaInstallation.html)
 
 <div class="warning" markdown="1">
+⚠️ **Important:**
+
  Mac users: Make sure to use this precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 </div>
 
@@ -146,6 +148,8 @@ switch
 ```
 
 <div class="note" markdown="1">
+📝 **Note:**
+
 You can also switch books using the **Companies** or **Deliveries** buttons in the navigation bar.
 </div>
 
@@ -178,6 +182,8 @@ help
 ```
 
 <div class="note" markdown="1">
+📝 **Note:**
+
 You can also open the help window by clicking the **Help** button in the navigation bar.
 </div>
 ---
@@ -250,6 +256,8 @@ Examples:
 - `add n/Dell Singapore p/65551234 e/contact@dell.com a/1 Harbour Front Ave t/electronics t/important`
 
 <div class="note" markdown="1">
+📝 **Note:**
+
 A company can have any number of tags, or none at all.
 </div>
 
@@ -387,6 +395,8 @@ clear
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
 <div class="warning" markdown="1"> 
+⚠️ **Important:**
+
 The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
 </div>
 
@@ -460,6 +470,8 @@ list
 ```
 
 <div class="note" markdown="1">
+📝 **Note:**
+
 Use `list` to reset the view after a `sort` command.
 </div>
 ---
@@ -538,6 +550,8 @@ route
 ```
 
 <div class="warning" markdown="1"> 
+⚠️ **Important:**
+
 At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
 </div>
 
