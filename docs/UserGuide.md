@@ -552,9 +552,10 @@ route
 <div class="warning" markdown="1"> 
 ⚠️ **Important:**
 
-Please ensure you have a stable internet connection before using this feature. The process might take a while.
+- Please ensure you have a stable internet connection before using this feature. The process might take a while depending on your connection. 
+- `Planning Route for User... please wait` indicates that the planning is not completed.
 
-At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
+- At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
 </div>
 
 ---
@@ -719,6 +720,8 @@ Follow the file format carefully. Files that do not conform to the required form
 
 ## Known Issues
 
+- `Route` command will not function on **specific OS versions** (More common on `linux` systems).
+- When using `Route` command with multiple deliveries heading to the same location, the map will not display all deliveries due to an overlap in UI, this will be fixed in later releases.
 ___
 
 ## Built With

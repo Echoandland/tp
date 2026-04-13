@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.company.Company;
 import seedu.address.model.tag.Tag;
 
@@ -101,12 +100,11 @@ public class Delivery {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("product", product)
-                .add("company", company)
-                .add("deadline", deadline)
-                .add("tags", tags)
-                .toString();
+        return String.format("Product: %s; Company: %s; Deadline: %s; Tags: %s",
+                product,
+                company.getName(),
+                deadline,
+                tags);
     }
 
 }

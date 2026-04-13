@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -105,13 +104,12 @@ public class Company {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("address", address)
-                .add("tags", tags)
-                .toString();
+        return String.format("Name: %s; Phone: %s; Email: %s; Address: %s; Tags: %s",
+                name,
+                phone,
+                email,
+                address,
+                tags);
     }
 
 }
