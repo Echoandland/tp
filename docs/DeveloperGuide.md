@@ -829,12 +829,8 @@ Switch to the Delivery Book with `switch` before running these test cases.
 
 Team size: 4
 
-1. **[PLACEHOLDER]**: [Description of planned enhancement.]
+1. **Show a warning when adding a delivery with a past deadline** — currently the app accepts any valid date format regardless of whether the deadline has already passed. Adding a warning for past deadlines would help users catch accidental data entry errors.
 
-2. **[PLACEHOLDER]**: [Description of planned enhancement.]
+2. **Support multiple products per delivery** — currently each delivery tracks a single product. Enhancing add in the Delivery Book to accept multiple p/ prefixes would better reflect real-world delivery scenarios where multiple products are shipped together.
 
-3. **[PLACEHOLDER]**: [Description of planned enhancement.]
-
-4. **[PLACEHOLDER]**: [Description of planned enhancement.]
-
-5. **[PLACEHOLDER]**: [Description of planned enhancement.]
+3. **Add specific error messages are shown to let user know what went wrong** - currently the text turns red and a valid example will be shown for all forms of invalid command usage. It will be more suitable to indicate to user exactly which field is missing or invalid.
