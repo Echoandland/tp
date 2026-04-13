@@ -126,9 +126,17 @@ The Routes view displays an interactive map with the optimised route for selecte
 * All data saves automatically after every command — no manual save needed
 * Company records live in `addressbook.json`
 * Delivery records live in `deliverybook.json`
-* Both files are created in the same folder as the jar on first launch
-* To back up, copy both JSON files somewhere safe
-* To transfer to another machine, move the jar and both JSON files together
+* `user.json` contains information with regards to `set` command and origin address
+
+<div class="warning" markdown="1">
+⚠️ **Important:**
+
+The only field that should be edited in `user.json` is `address`. Editing other fields can result in the failure of certain commands. Delete `user.json` and start with the sample version if necessary.
+</div>
+
+* All files are created in the same folder as the jar on first launch
+* To back up, copy the JSON files somewhere safe
+* To transfer to another machine, move the jar and the JSON files together
 
 ---
 
@@ -252,6 +260,14 @@ Manage your network of business contacts. These commands are active when you're 
 |`a/`|Physical address|Yes|
 |`t/`|Tag (repeatable)|No|
 
+<div class="warning" markdown="1"> 
+⚠️ **Important:**
+
+While we allow the creation of companies with names that only differ only in casing i.e. `Apple` and `apple` , it is not recommended as it can cause issues when assigning deliveries.
+
+You may however do so at your own discretion.
+</div>
+
 ---
 
 #### Adding a company: `add`
@@ -337,6 +353,7 @@ Examples:
 
 At least one prefix must be provided. Multiple prefixes narrow the results (AND logic).
 </div>
+
 ---
 
 #### Clearing a filter: `unfilter`
@@ -391,27 +408,21 @@ This action is permanent and cannot be undone. Use with caution.
 
 Track outgoing deliveries. Use `switch` or the Deliveries tab to get here from the Company Book.
 
-<div class="warning" markdown="1"> 
-⚠️ **Important:**
-
-The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
-</div>
-
-| Command                | Format                                                       |Example|
-|------------------------|--------------------------------------------------------------|-|
-| Add                    | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`              |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
-| Delete                 | `delete INDEX`                                               |`delete 2`|
+| Command                | Format                                                  |Example|
+|------------------------|---------------------------------------------------------|-|
+| Add                    | `add p/PRODUCT c/COMPANY d/DEADLINE [t/TAG]...`         |`add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`|
+| Delete                 | `delete INDEX`                                          |`delete 2`|
 | Edit                   | `edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`edit 1 d/2026-03-26 09:00 t/fragile`|
-| Mark delivered         | `mark INDEX`                                                 |`mark 1`|
-| Unmark                 | `unmark INDEX`                                               |`unmark 1`|
-| Select for routing     | `select INDEX [INDEX]...`                                    |`select 1 3 5`|
-| Clear selection        | `select none`                                                |`select none`|
-| Plan route             | `route`                                                      |`route`|
-| Filter                 | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...`     |`filter c/Dell p/Laptop t/fragile`|
-| Reset filter           | `unfilter`                                                   |`unfilter`|
- List all               | `list`                                                       |`list`|
-| Sort delivery by field | `sort [p/] [c/] [a/] [d/] [t/]`                              |`sort c/`|
-| Clear all              | `clear`                                                      |`clear`|
+| Mark delivered         | `mark INDEX`                                            |`mark 1`|
+| Unmark                 | `unmark INDEX`                                          |`unmark 1`|
+| Select for routing     | `select INDEX [INDEX]...`                               |`select 1 3 5`|
+| Clear selection        | `select none`                                           |`select none`|
+| Plan route             | `route`                                                 |`route`|
+| Filter                 | `filter [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...` |`filter c/Dell p/Laptop t/fragile`|
+| Reset filter           | `unfilter`                                              |`unfilter`|
+ List all               | `list`                                                  |`list`|
+| Sort delivery by field | `sort [p/] [c/] [a/] [d/]`                              |`sort c/`|
+| Clear all              | `clear`                                                 |`clear`|
 
 **Delivery prefixes:**
 
@@ -421,6 +432,12 @@ The company specified in `c/COMPANY` must already exist in the Company Book. If 
 |`c/`|Company name|Yes|
 |`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
+
+<div class="warning" markdown="1"> 
+⚠️ **Important:**
+
+The company specified in `c/COMPANY` must already exist in the Company Book. If no matching company is found, the command will fail. The delivery is linked directly to the existing company record instead of storing a separate company name string.
+</div>
 
 ---
 
@@ -544,7 +561,6 @@ route
 
 - Please ensure you have a stable internet connection before using this feature. The process might take a while depending on your connection. 
 - `Planning Route for User... please wait` indicates that the planning is not completed.
-
 - At least one delivery must be selected before running `route`. Equivalent to clicking **Plan Today's Route** in the UI after selecting deliveries.
 </div>
 
@@ -556,7 +572,7 @@ Filters to a specific company's deliveries and sorts them by deadline.
 
 Format:
 ```
-sort [p/] [c/] [d/] [t/]
+sort [p/] [c/] [d/]
 ```
 
 Example:
@@ -631,9 +647,9 @@ This action is permanent and cannot be undone.
 <summary>How do I back up my data?</summary>
 <ul>
 <li>Locate the folder where MyCelia's <code>.jar</code> file is stored.</li>
-<li>Copy both <code>addressbook.json</code> and <code>deliverybook.json</code> to a safe location of your choice.</li>
+<li>Copy <code>addressbook.json</code>, <code>deliverybook.json</code> and <code>user.json</code> to a safe location of your choice.</li>
 </ul>
-<p>Both files contain all your company and delivery data respectively.</p>
+<p>The files contain all your company, delivery and origin address data respectively.</p>
 </details>
 
 <details>
@@ -667,6 +683,22 @@ Follow the file format carefully. Files that do not conform to the required form
     "tags": [ "TAGS" ]
   } ]
 }</code></pre>
+<p><code>user.json</code> — stores origin address details:</p>
+<pre><code class="language=json">{
+  "user" : {
+    "company" : {
+    "name" : "My Company",
+    "phone" : "61234567",
+    "email" : "company@example.com",
+    "address" : "3 Temasek Boulevard, Singapore 038983",
+    "tags" : [ ]
+  },
+  "vehicle" : {
+    "profile" : "driving-car"
+  }
+ }
+}</code></pre>
+<p>Only <code>address</code> field within <code>user.json</code> should be edited</p>
 </details>
 
 <details>
@@ -683,7 +715,7 @@ Follow the file format carefully. Files that do not conform to the required form
 <ol>
 <li>Install MyCelia on the new computer.</li>
 <li>On your old computer, locate the folder containing the <code>.jar</code> file.</li>
-<li>Copy <code>addressbook.json</code> and <code>deliverybook.json</code> to an external drive or cloud storage.</li>
+<li>Copy <code>addressbook.json</code>, <code>deliverybook.json</code> and <code>user.json</code> to an external drive or cloud storage.</li>
 <li>On the new computer, replace the newly created JSON files with the ones from your old computer.</li>
 <li>Relaunch MyCelia — your data should appear exactly as before.</li>
 </ol>
