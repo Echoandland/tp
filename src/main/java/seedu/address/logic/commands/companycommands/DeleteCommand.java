@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
@@ -28,6 +29,8 @@ public class DeleteCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_DELETE_COMPANY_SUCCESS = "Deleted Company: %1$s";
+    public static final String MESSAGE_DELETE_CASCADED_DELIVERIES =
+            "\nAlso deleted %1$d associated delivery/deliveries:\n%2$s";
 
     private final Index targetIndex;
 
@@ -45,13 +48,24 @@ public class DeleteCommand extends Command {
         }
 
         Company companyToDelete = lastShownList.get(targetIndex.getZeroBased());
+        List<Delivery> cascadedDeliveries = new ArrayList<>();
         for (Delivery d: new ArrayList<>(model.getFilteredDeliveryList())) {
             if (d.getCompany().equals(companyToDelete)) {
+                cascadedDeliveries.add(d);
                 model.deleteDelivery(d);
             }
         }
         model.deleteCompany(companyToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_COMPANY_SUCCESS, Messages.format(companyToDelete)));
+
+        String message = String.format(MESSAGE_DELETE_COMPANY_SUCCESS, Messages.format(companyToDelete));
+        if (!cascadedDeliveries.isEmpty()) {
+            String deliveryList = cascadedDeliveries.stream()
+                    .map(Messages::format)
+                    .collect(Collectors.joining("\n"));
+            message += String.format(MESSAGE_DELETE_CASCADED_DELIVERIES,
+                    cascadedDeliveries.size(), deliveryList);
+        }
+        return new CommandResult(message);
     }
 
     @Override

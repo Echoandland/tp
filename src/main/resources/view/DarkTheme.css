@@ -125,6 +125,9 @@
 .command-box-pane {
     -fx-background-color: transparent;
     -fx-padding: 4 20 0 20;
+    -fx-min-height: 60;
+    -fx-pref-height: 60;
+    -fx-max-height: 60;
 }
 
 /* Command input row */
@@ -166,6 +169,9 @@
 .result-display-pane {
     -fx-background-color: transparent;
     -fx-padding: 2 20 4 20;
+    -fx-min-height: 80;
+    -fx-pref-height: 80;
+    -fx-max-height: 80;
 }
 
 .result-display {
@@ -176,9 +182,7 @@
     -fx-font-family: "Segoe UI", "SF Pro Text", "Inter", sans-serif;
     -fx-font-size: 10pt;
     -fx-text-fill: #4E6E9B;
-    -fx-min-height: 40;
-    -fx-pref-height: 60;
-    -fx-max-height: 120;
+    -fx-padding: 0 12 0 0;
 }
 
 /* TextAreaSkin internals — must all be transparent to avoid gray block */
@@ -188,6 +192,8 @@
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-padding: 0;
+    -fx-vbar-policy: as-needed;
+    -fx-hbar-policy: as-needed;
 }
 
 .result-display .scroll-pane > .viewport {
