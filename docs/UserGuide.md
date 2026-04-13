@@ -136,6 +136,27 @@ The Routes view displays an interactive map with the optimised route for selecte
 
 ---
 
+### General Information
+
+<div class="note" markdown="1">
+📝 **Note:**
+
+**Error** messages in red mean the command **did not succeed**.
+
+You will be notified of the correct command format below the command box
+</div>
+
+<div class="note" markdown="1">
+**📝Notes about the command format:**
+- Words in `UPPER_CASE` are parameters to be supplied by the user.
+- Items in square brackets such as `[t/TAG]` are optional.
+- Parameters can be provided in any order unless otherwise stated.
+- For commands that require index, please in put a non-negative whole number that ranges from `1 to 2,147,483,647`
+- `Deadline` fields strictly require the format `yyyy-MM-dd HH:mm`
+- Avoid giving invalid addresses as it will prevent you from accessing the route feature fully
+- Duplicate entries are not allowed
+</div>
+
 ### Global Commands
 
 These commands work regardless of which book you are currently in.
@@ -240,13 +261,6 @@ Manage your network of business contacts. These commands are active when you're 
 |`e/`|Email contains keyword|
 |`t/`|Tag matches keyword|
 
-<div class="note" markdown="1">
-**📝Notes about the command format:**
-- Words in `UPPER_CASE` are parameters to be supplied by the user.
-- Items in square brackets such as `[t/TAG]` are optional.
-- Parameters can be provided in any order unless otherwise stated.
-</div>
-
 ---
 
 #### Adding a company: `add`
@@ -274,8 +288,6 @@ A company can have any number of tags, or none at all.
 <p>A company is considered a duplicate if it has the <strong>same name, phone, email and address</strong> as an existing entry. Company names are case-insensitive for matching purposes.</p>
 
 </details>
-
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-company) below.
 
 ---
 
@@ -313,8 +325,6 @@ Specifying one or more `t/` fields replaces **all** existing tags — tags are n
 <summary>How do I remove all tags from a company?</summary>
 <p>Specify <code>edit INDEX t/</code> without any tag value. This clears all existing tags from the entry.</p>
 </details>
-
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-company) below.
 
 ---
 
@@ -366,8 +376,6 @@ Example:
 
 Deleting a company automatically deletes its associated deliveries in the Delivery Book. 
 </div>
-
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-delete-company) below.
 
 ---
 
@@ -423,14 +431,6 @@ The company specified in `c/COMPANY` must already exist in the Company Book. If 
 |`d/`|Deadline (`yyyy-MM-dd HH:mm`)|Yes for `add`, optional for `edit`|
 |`t/`|Tag (repeatable)|No|
 
-<div class="note" markdown="1">
-📝 **Notes about the command format:**
-
-- Company matching is case-insensitive.
-- Deadlines must follow the format `yyyy-MM-dd HH:mm`.
-- A duplicate delivery cannot be added.
-</div>
-
 ---
 
 #### Adding a delivery: `add`
@@ -456,8 +456,6 @@ Deadlines must follow the format `yyyy-MM-dd HH:mm`. Company matching is case-in
 <summary>What deliveries are considered duplicates?</summary>
 <p>A delivery is a duplicate if it has the <strong>same product, company, and deadline</strong> as an existing delivery. Duplicate deliveries cannot be added.</p>
 </details>
-
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-add-delivery) below.
 
 ---
 #### Listing all deliveries: `list`
@@ -488,8 +486,6 @@ edit INDEX [p/PRODUCT] [c/COMPANY] [d/DEADLINE] [t/TAG]...
 Examples:
 - `edit 1 d/2026-03-26 09:00 t/fragile`
 - `edit 2 c/Dell Singapore`
-
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-edit-delivery) below.
 
 ---
 
@@ -618,8 +614,6 @@ delete INDEX
 Example:
 - `delete 2`
 
-For possible errors, refer to the [troubleshooting guide](#troubleshooting-delete-delivery) below.
-
 ---
 
 #### Clearing all deliveries: `clear`
@@ -634,155 +628,10 @@ clear
 <div class="warning" markdown="1">
 **⚠️ Important:**
 
-> This action is permanent and cannot be undone.
+This action is permanent and cannot be undone.
 </div>
 
 ---
-
-## Troubleshooting
-
-<div class="note" markdown="1">
-📝 **Note:**
-
-**Error** messages in red mean the command **did not succeed**.
-</div>
-
----
-
-### Global Commands
-
-#### Troubleshooting `set`
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No address prefix provided | `Invalid command format! ...` | Use the full format: `set a/ADDRESS`. |
-| Address field is empty | `Address cannot be empty.` | Provide a non-empty address after `a/`. |
-
----
-
-### Company Book
-
-#### Troubleshooting `add` company
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| Missing one or more required prefixes (`n/`, `p/`, `e/`, `a/`) | `Invalid command format! ...` | Include all required fields: `add n/... p/... e/... a/...`. |
-| Company with the same name and email already exists | `This company already exists in the Company Book.` | Check for an existing entry with `list` or `filter`. |
-| Invalid email format | `Email address must be valid.` | Ensure the email follows the format `user@domain.com`. |
-| Company name contains non-alphanumeric characters | `Company names may only contain alphanumeric characters and spaces.` | Remove any special characters from the name. |
-
----
-
-#### Troubleshooting `edit` company
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No fields specified to edit | `At least one field to edit must be provided.` | Include at least one of `n/`, `p/`, `e/`, `a/`, or `t/`. |
-| Index is out of range | `The company index provided is invalid.` | Use `list` to check the valid index range. |
-| Edited name or email matches an existing company | `This company already exists in the Company Book.` | Choose a different name or email. |
-
----
-
-#### Troubleshooting `delete` company
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No index provided | `Invalid command format! ...` | Provide the index: `delete INDEX`. |
-| Index is out of range | `The company index provided is invalid.` | Use `list` to check the valid index range. |
-
----
-
-#### Troubleshooting `filter` (Company Book)
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
-
----
-
-#### Troubleshooting `sort` (Company Book)
-
-| Scenario       | Message shown | How to fix                            |
-|----------------|--------------|---------------------------------------|
-| Invalid prefix | `Invalid command format! ...` | Use a valid prefix format: `sort n/`. |
-
----
-
-### Delivery Book
-
-#### Troubleshooting `add` delivery
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| Missing one or more required prefixes (`p/`, `c/`, `d/`) | `Invalid command format! ...` | Include all required fields: `add p/... c/... d/...`. |
-| Company does not exist in the Company Book | `Company not found in the Company Book.` | Add the company first using `add` in the Company Book. |
-| Deadline is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
-| Duplicate delivery already exists | `This delivery already exists in the Delivery Book.` | Check for an existing entry with `list` or `filter`. |
-
----
-
-#### Troubleshooting `edit` delivery
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No fields specified to edit | `At least one field to edit must be provided.` | Include at least one of `p/`, `c/`, `d/`, or `t/`. |
-| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
-| Company specified does not exist | `Company not found in the Company Book.` | Ensure the company exists before linking it to a delivery. |
-| Deadline format is invalid | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-04-01 09:00`. |
-
----
-
-#### Troubleshooting `delete` delivery
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No index provided | `Invalid command format! ...` | Provide the index: `delete INDEX`. |
-| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
-
----
-
-#### Troubleshooting `mark` / `unmark`
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No index provided | `Invalid command format! ...` | Provide the index: `mark INDEX` or `unmark INDEX`. |
-| Index is out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
-| Delivery is already marked as delivered | `This delivery is already marked as delivered.` | Use `unmark INDEX` if you need to reverse this. |
-| Delivery is not marked as delivered | `This delivery has not been marked as delivered.` | Use `mark INDEX` first. |
-
----
-
-#### Troubleshooting `select`
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No index or `none` provided | `Invalid command format! ...` | Use `select INDEX [INDEX]...` or `select none`. |
-| One or more indices are out of range | `The delivery index provided is invalid.` | Use `list` to check the valid index range. |
-
----
-
-#### Troubleshooting `route`
-
-| Scenario                       | Message shown | How to fix                                                                 |
-|--------------------------------|--------------|----------------------------------------------------------------------------|
-| Overdue delivery selected      | `Overdue Deliveries, please update the deadline...` | Do not select the overdue delivery or edit it to have a different deadline |
-
----
-
-#### Troubleshooting `sort` (Delivery Book)
-
-| Scenario                | Message shown | How to fix                            |
-|-------------------------|--------------|---------------------------------------|
-| Invalid prefix provided | `Invalid command format! ...` | Use a valid prefix format: `sort c/`. |
-
----
-
-#### Troubleshooting `filter` (Delivery Book)
-
-| Scenario | Message shown | How to fix |
-|----------|--------------|------------|
-| No prefixes provided | `Invalid command format! ...` | Provide at least one filter prefix, e.g. `filter c/Dell`. |
-| Deadline filter is in the wrong format | `Deadline must follow the format yyyy-MM-dd HH:mm.` | Use the correct format, e.g. `d/2026-03-25 14:30`. |
 
 ## FAQ
 
