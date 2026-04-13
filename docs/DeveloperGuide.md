@@ -461,19 +461,47 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ## Non-functional requirements (NFRs)
 
+**Usability:**
 
-1. **Command-first usability:** All core features (add/edit/delete/view/search/tag/mark status) shall be usable via typed commands without requiring mouse-only operations.
-2. **Performance (search):** With up to **10,000 contacts** and **1,000 delivery records**, search results shall be displayed within **2 seconds** on a typical laptop.
-3. **Performance (list rendering):** With up to **1,000 delivery records**, rendering a delivery list shall complete within **2 seconds**.
-4. **Reliability (data loss):** In the event of a crash or connectivity loss, the system shall not lose more than **1 minute** of user edits (autosave or frequent persistence).
-5. **Portability:** The app shall run on **Windows, macOS, and Linux** using **Java 17**.
-6. **Local storage:** User data shall be stored locally in a **human-editable text file**.
-7. **No external server dependency:** Core features shall not depend on a custom remote server (the app remains usable without any self-hosted backend).
-8. **Security (local data):** The system shall not transmit user data externally unless explicitly triggered by the user (e.g., export/share).
+1. The application shall use consistent command formats and prefixes across all features, accepting only English characters.
+2. The system shall provide a hint line showing the expected command format as the user types.
 
+**Reliability:**
+
+1. The system shall not lose existing data when an invalid command is entered.
+2. The system shall respond to invalid commands with clear visual feedback.
+3. The system shall not allow a delivery to be added if its linked company does not exist in the Company Book.
+
+**Portability:**
+
+1. The system shall run on Windows, Mac and Linux as long as Java 17 or above is installed.
+
+**Performance:**
+
+1. The system shall respond to any valid command within 2 seconds when the total number of entries does not exceed 1,000 companies and 1,000 deliveries.
+2. The system shall plan and display an optimised route within 30 seconds for up to 5 selected deliveries under a stable internet connection.
+
+**Persistence:**
+
+1. The system shall save all data automatically after every command with no manual save required.
+2. The system shall store data locally in addressbook.json and deliverybook.json.
+
+**Reliability:**
+1. In the event of a crash or connectivity loss, the system shall not lose more than **1 minute** of user edits (autosave or frequent persistence)
+
+**Availability:**
+1. Core features shall not depend on a custom remote server (the app remains usable without any self-hosted backend)
+
+**Security:**
+
+1. The system shall not transmit any user data over a network, except for route planning API calls.
+2. API credentials used for route planning shall not be exposed in the repository.
+
+**Accessibility:**
+
+1. The system shall allow users to complete all core tasks using commands without requiring mouse interaction.
 
 ---
-
 
 ## Glossary
 
@@ -499,46 +527,310 @@ testers are expected to do more *exploratory* testing.
 
 </div>
 
+## Appendix: Instructions for Manual Testing
+
 ### Launch and shutdown
 
-1. Initial launch
+1. Initial launch as per [Quick Start](#quick-start)
+   - Expected: GUI launches with sample companies and deliveries loaded in both books.
 
-   1. Download the jar file and copy into an empty folder
+2. Saving window preferences
+   - Resize and reposition the window, then close it.
+   - Re-launch the app.
+   - Expected: The most recent window size and location are retained.
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+---
 
-1. Saving window preferences
+### Global Commands
 
-   1. Resize the window to an optimum size. Move the window to a different location. Close the window.
+#### Switching books
 
-   1. Re-launch the app by double-clicking the jar file.<br>
-       Expected: The most recent window size and location is retained.
+1. Prerequisites: App is running.
 
-1. _{ more test cases …​ }_
+2. Test case: `switch` from the Company Book
+   - Expected: View switches to the Delivery Book. The **Deliveries** tab is now active.
 
-### Deleting a Company
+3. Test case: `switch` from the Delivery Book
+   - Expected: View switches back to the Company Book. The **Companies** tab is now active.
 
-1. Deleting a company while all companies are being shown
+4. Test case: Click the **Companies** or **Deliveries** pill button in the navigation bar
+   - Expected: Same behaviour as the `switch` command.
 
-   1. Prerequisites: List all companies using the `list` command. Multiple companies in the list.
+#### Setting the origin address
 
-   1. Test case: `delete 1`<br>
-      Expected: First company is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+1. Prerequisites: App is running.
 
-   1. Test case: `delete 0`<br>
-      Expected: No company is deleted. Error details shown in the status message. Status bar remains the same.
+2. Test case: `set a/10 Anson Road, Singapore 079903`
+   - Expected: Origin address is saved successfully.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+3. Test case: `set` or `set a/`
+   - Expected: Command input turns red and displays the correct command format.
 
-1. _{ more test cases …​ }_
+---
+
+### Company Book
+
+#### Adding a company
+
+1. Prerequisites: There should be no company named `Acme Supplies` in the Company Book.
+
+2. Test case: `add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road t/supplier`
+   - Expected: Acme Supplies is added and appears in the Company Book.
+
+3. Test case: `add`, `add n/Acme Supplies`, or any other incomplete input
+   - Expected: Command input turns red and displays the correct command format.
+
+4. Test case: `add n/Acme Supplies p/62223333 e/hi@acme.com a/10 Anson Road`
+   - Prerequisites: A company with the same name and email already exists.
+   - Expected: `This company already exists in the Company Book.` error.
+
+#### Editing a company
+
+1. Prerequisites: Run `list` and verify at least one company exists. Note its index.
+
+2. Test case: `edit 1 p/65559999`
+   - Expected: Phone number of the first company updates to `65559999`.
+
+3. Test case: `edit 1 t/wholesale t/urgent`
+   - Expected: All existing tags are replaced with `wholesale` and `urgent`.
+
+4. Test case: `edit 1 t/`
+   - Expected: All tags are cleared from the company.
+
+5. Test case: `edit 1`
+   - Expected: Command input turns red and displays the correct command format.
+
+6. Test case: `edit 999 p/65559999` or any index that is out of range
+   - Expected: `The company index provided is invalid`
+
+#### Deleting a company
+
+1. Test case: `delete 1`
+   - Expected: The first company is removed from the Company Book.
+
+2. Test case: `delete`
+   - Expected: Command input turns red and displays the correct command format.
+
+3. Test case: `delete 999` or any index that is out of range
+   - Expected: `The company index provided is invalid`
+
+#### Filtering companies
+
+1. Prerequisites: There should be a company named `Dell Singapore` with tag `electronics`.
+
+2. Test case: `filter c/Dell`
+   - Expected: Dell Singapore appears in the filtered list.
+
+3. Test case: `filter t/electronics`
+   - Expected: All companies tagged `electronics` are displayed.
+
+4. Test case: `filter c/Dell t/electronics`
+   - Expected: Only companies matching both conditions are displayed.
+
+5. Test case: `filter`
+   - Expected: Command input turns red and displays the correct command format.
+
+6. Test case: `unfilter`
+   - Expected: All companies are shown again.
+
+#### Clearing all companies
+
+1. Prerequisites: There should be multiple companies in the Company Book. Verify with `list`.
+
+2. Test case: `clear`
+   - Expected: All companies and deliveries are permanently removed from the Company Book and Delivery Book.
+
+---
+
+### Delivery Book
+
+<div class="note" markdown="1">
+📝 **Note:**
+
+Switch to the Delivery Book with `switch` before running these test cases.
+</div>
+
+#### Adding a delivery
+
+1. Prerequisites: A company named `Acme Supplies` exists in the Company Book.
+
+2. Test case: `add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`
+   - Expected: Delivery is added and appears in the Delivery Book sorted by deadline.
+
+3. Test case: `add p/Industrial Printer c/Acme Supplies d/2026-03-25 14:30 t/urgent`
+   - Prerequisites: This exact delivery already exists.
+   - Expected: `This delivery already exist in Delivery Book`.
+
+4. Test case: `add`, `add p/Laptop`, or any other incomplete input
+   - Expected: Command input turns red and displays the correct command format.
+
+5. Test case: `add p/Laptop c/NonExistentCo d/2026-03-25 14:30`
+   - Prerequisites: There is no company named `NonExistentCo` in the Company Book.
+   - Expected: `Company not found`.
+
+6. Test case: `add p/Laptop c/Acme Supplies d/25-03-2026`
+   - Expected: Command input turns red and displays the correct command format.
+
+#### Editing a delivery
+
+1. Prerequisites: Run `list` and verify at least one delivery exists. Note its index.
+
+2. Test case: `edit 1 d/2026-04-01 09:00`
+   - Expected: Deadline of the first delivery updates and list re-sorts accordingly.
+
+3. Test case: `edit 1 t/fragile`
+   - Expected: Tags on the first delivery are replaced with `fragile`.
+
+4. Test case: `edit 1` or `edit 999 d/2026-04-01 09:00`
+   - Expected: Command input turns red and displays the correct command format.
+   
+5. Test case: `edit 1 c/NonExistentCo`
+   - Expected: `Company not found`.
+
+#### Deleting a delivery
+
+1. Prerequisites: Run `list` and verify at least two deliveries exist.
+
+2. Test case: `delete 1`
+   - Expected: The first delivery is removed from the Delivery Book.
+
+3. Test case: `delete` or `delete 999`
+   - Expected: Command input turns red and displays the correct command format.
+
+4. Test case: `delete 1000` or any invalid index
+   - Expected: `The delivery index provided is invalid`
+
+#### Marking and unmarking a delivery
+
+1. Prerequisites: Run `list` and verify at least one delivery exists that is not yet marked as delivered.
+
+2. Test case: `mark 1`
+   - Expected: The first delivery shows a `delivered` tag.
+
+3. Test case: `mark 1` again
+   - Expected: Nothing changes.
+
+4. Test case: `unmark 1`
+   - Expected: The `delivered` tag is removed from the first delivery.
+
+5. Test case: `unmark 1` again
+   - Expected: Nothing changes.
+
+6. Test case: `mark` or `unmark`
+   - Expected: Command input turns red and displays the correct command format.
+
+7. Test case: `mark 1000` or `unmark 1000`
+   - Expected: `The delivery index provided is invalid`
+
+#### Selecting deliveries and planning a route
+
+1. Prerequisites: Run `list` and verify at least two deliveries exist. Ensure an origin address has been set with `set a/ADDRESS`.
+
+2. Test case: `select 1 2`
+   - Expected: Deliveries at indices 1 and 2 are checked for route planning.
+
+3. Test case: `route` after a valid `select` command instance
+   - Expected: Routes tab opens and displays an optimised route for the selected deliveries.
+
+4. Test case: `select none`
+   - Expected: All selections are cleared.
+
+5. Test case: `route` with no deliveries selected
+   - Expected: `No deliveries selected. Use checkboxes or the select command first`.
+
+6. Test case: `select 1000` or any other invalid index
+   - Expected: `The delivery index provided is invalid`
+
+#### Sorting deliveries
+
+1. Prerequisites: There should be at least two deliveries linked to different companies.
+
+2. Test case: `sort c/`
+   - Expected: Deliveries are sorted based off the alphabetical ordering of the Company names.
+
+3. Test case: `list`
+   - Expected: All deliveries are shown again, re-sorted by deadline.
+
+4. Test case: `sort`
+   - Expected: Command input turns red and displays the correct command format.
+
+#### Filtering deliveries
+
+1. Prerequisites: There should be a delivery linked to `Dell Singapore` with tag `fragile`.
+
+2. Test case: `filter c/Dell`
+   - Expected: All deliveries linked to Dell Singapore are shown.
+
+3. Test case: `filter t/fragile`
+   - Expected: All deliveries tagged `fragile` are shown.
+
+4. Test case: `filter c/Dell t/fragile`
+   - Expected: Only deliveries matching both conditions are shown.
+
+5. Test case: `filter`
+   - Expected: Command input turns red and displays the correct command format.
+
+6. Test case: `unfilter`
+   - Expected: All deliveries are shown again.
+
+#### Clearing all deliveries
+
+1. Prerequisites: There should be multiple deliveries in the Delivery Book. Verify with `list`.
+
+2. Test case: `clear`
+   - Expected: All deliveries are permanently removed from the Delivery Book.
+
+---
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Prerequisites: App is running.
 
-   1. When data file is corrupted, it will attempt to salvage as much as possible
-   2. If `Company 1` has a missing/corrupted field, the error is logged and the remaining companies left in the data file will be loaded
-   3. Users can attempt to manually set the data file by editing the json files
+2. Test case: Run any command that modifies data (e.g. add a company), then close and relaunch the app.
+   - Expected: The modified data persists after relaunch.
 
-1. _{ more test cases …​ }_
+3. Test case: Delete `addressbook.json` and restart the app.
+   - Expected: App initialises with sample company data.
+
+4. Test case: Enter invalid JSON into `deliverybook.json` and restart the app.
+   - Expected: A warning is logged to the terminal and the app starts with an empty Delivery Book.
+
+## Appendix: Effort
+
+### Difficulty & Challenges
+
+1. While AB3 deals with `Address Book`, our app handles and integrates two distinct entities — companies and deliveries — which are directly linked to each other.
+
+2. Integrating an external API required securing sensitive credentials using git-crypt, adding an additional layer of complexity to the development workflow.
+
+3. Ensuring consistent and expected behaviour across the company-delivery link was non-trivial — changes to a company could affect its associated deliveries, requiring careful coordination across the codebase.
+
+4. Hard to navigate initially due to the large inherited AB3 codebase and layered architecture.
+
+5. Extensive testing was needed due to the increased system complexity from managing two linked entities simultaneously.
+
+6. Maintaining consistency across the application — commands had to behave predictably for both companies and deliveries, including parsing, validation, and user feedback.
+
+### Effort & Achievements
+
+1. Higher implementation effort required due to the more complex scope of managing two linked entities rather than one.
+
+2. Successfully secured API credentials using git-crypt, ensuring sensitive data is never exposed in the repository.
+
+3. Deepened existing features and created new features that complement the company-delivery relationship.
+
+4. Conquered integration challenges to keep the company and delivery books in sync while maintaining clean separation of concerns.
+
+5. Carefully reviewed each other's pull requests before merging to ensure code quality.
+
+---
+
+## Appendix: Planned Enhancements
+
+Team size: 4
+
+1. **Show a warning when adding a delivery with a past deadline** — currently the app accepts any valid date format regardless of whether the deadline has already passed. Adding a warning for past deadlines would help users catch accidental data entry errors.
+
+2. **Support multiple products per delivery** — currently each delivery tracks a single product. Enhancing add in the Delivery Book to accept multiple p/ prefixes would better reflect real-world delivery scenarios where multiple products are shipped together.
+
+3. **Add specific error messages are shown to let user know what went wrong** - currently the text turns red and a valid example will be shown for all forms of invalid command usage. It will be more suitable to indicate to user exactly which field is missing or invalid.

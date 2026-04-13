@@ -40,7 +40,7 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "urgent";
 
     public static final String MESSAGE_SUCCESS = "New delivery added: %1$s";
-    public static final String MESSAGE_DUPLICATE_DELIVERY = "This delivery already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_DELIVERY = "This delivery already exists in the delivery book";
 
     private final Product product;
     private final CompanyNameContainsKeywordsPredicate name;

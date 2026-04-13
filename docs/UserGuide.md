@@ -155,6 +155,7 @@ You will be notified of the correct command format below the command box
 - `Deadline` fields strictly require the format `yyyy-MM-dd HH:mm`
 - Avoid giving invalid addresses as it will prevent you from accessing the route feature fully
 - Duplicate entries are not allowed
+- Use of special cases such as `!, /, \, #, @` in any of the fields is not allowed except for `Email`
 </div>
 
 ### Global Commands
